@@ -1,19 +1,17 @@
 var start = Date.now()
-console.log('loading...')
+
 var pull = require('pull-stream')
 var Scroll = require('pull-scroll')
 var h = require('hyperscript')
 var ssbc = require('ssb-client')
 var markdown = require('ssb-markdown')
 
-var Columns = require('columns')
-var Stack = require('columns/stack')
+var Columns = require('column-deck')
+var Stack = require('column-deck/stack')
 
 var moment = require('moment')
 
 function px (n) { return n+'px' }
-
-console.log('starting...', Date.now() - start)
 
 var dock = Columns({width: 600, margin: 20})
 
@@ -106,6 +104,8 @@ ssbc(function (err, _sbot) {
 //
 
 })
+
+
 
 
 
