@@ -1,0 +1,20 @@
+{
+  "name": "dataclient",
+  "description": "",
+  "version": "0.0.0",
+  "homepage": "https://github.com/dominictarr/dataclient",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dominictarr/dataclient.git"
+  },
+  "dependencies": {
+    "marked": "^0.3.5",
+    "moment": "^2.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "set -e; for t in test/*.js; do node $t; done"
+  },
+  "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
+  "license": "MIT"
+}
