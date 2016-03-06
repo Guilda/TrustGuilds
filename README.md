@@ -1,4 +1,4 @@
-# dataclient
+# patchdeck
 
 A minimal sbot client, in the tweetdeck tradition.
 
