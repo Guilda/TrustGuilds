@@ -8,12 +8,12 @@ var ssbc = require('ssb-client')
 var markdown = require('ssb-markdown')
 var Cat = require('pull-cat')
 
+var suggest = require('suggest-box')
+
 var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
-
-var queries = require('./queries')
 
 function px (n) { return n+'px' }
 
@@ -21,6 +21,8 @@ var dock = Columns({width: 600, margin: 20})
 
 document.body.style.margin = px(0)
 document.body.style.padding = px(0)
+
+document.body.appendChild(h('style', '.selected { color: red };'))
 
 var lightbox = require('./lightbox')()
 document.body.appendChild(lightbox)
@@ -70,7 +72,6 @@ function name (id) {
       }}
     ]}),
     function (err, names) {
-      console.log('NAMES', names, err)
       if(err) throw err
       n.textContent = maxKey(names) || id.substring(0, 10)
     })
@@ -121,9 +122,20 @@ function feedback (id) {
   return f
 }
 
+function toggle(off, on, change) {
+  var state = false
+  var a = h('a', {href: '#', onclick: function () {
+    state = !state
+    a.innerText = state ? on : off
+    change(state)
+  }}, off)
+  change(state)
+  return a
+}
+
 var streams = {
   all: function () {
-    return pull(sbot.createLogStream({reverse: true}), pull.through(console.log.bind(console)))
+    return sbot.createLogStream({reverse: true})
   },
   user: function (id) {
     return sbot.createUserStream({ id: id, reverse: true })
@@ -201,15 +213,68 @@ function createPanel (stream) {
     .addFixed(h('h3', 'feed', {style: {background: 'grey'}},
       click('post', function () {
         var ta = h('textarea', {rows: 20, cols: 80})
+        var prev = h('span')
+        
+        var tog
         lightbox.show(h('span',
-          ta,
+          tog = h('div', ta),
           h('br'),
           click('cancel', lightbox.close),
+          ' ',
+          toggle('preview', 'edit', function (state) {
+            tog.innerHTML = ''
+            if(!state) tog.appendChild(ta)
+            else {
+              prev.innerHTML = markdown.block(ta.value)
+              tog.appendChild(prev)
+            }
+            lightbox.center()
+          }),
           click('publish', function () {
             alert(ta.value)
           })
         ))
+
+        suggest(ta, function (word, cb) {
+          if(!/^[@%&!]/.test(word[0])) return cb()
+          if(word.length < 2) return cb()
+
+          var sigil = word[0]
+          var embed = ((sigil === '!') ? '!' : '')
+          if(embed) sigil = '&'
+          if(word[0] !== '@') word = word.substring(1)
+
+          first(
+            sbot.links2.read({query: [
+              {$filter: {rel: ['mentions', {$prefix: word}], dest: {$prefix: sigil}}},
+              {$reduce: {$group: [['rel', 1], 'dest'], $count: true}}
+            ]}),
+            function (err, names) {
+              var ary = []
+              for(var name in names)
+                for(var id in names[name])
+                  ary.push({name: name, id: id, count: names[name][id]})
+
+              ary = ary
+              .filter(function (e) {
+                if(!embed) return true
+                console.log(e.name, /\.(gif|jpg|png|svg)$/i.test(e.name))
+                return /\.(gif|jpg|png|svg)$/i.test(e.name)
+              }).sort(function (a, b) {
+                return b.count - a.count
+              }).map(function (e) {
+                return {
+                  title: e.name + ': ' + e.id.substring(0,10)+' ('+e.count+')',
+                  value: embed+'['+e.name+']('+e.id+')'
+                }
+              })
+
+              cb(null, ary)
+            }
+          )
+        })
       }),
+      ' ',
       click('close', function () {
         dock.remove(stack)
       })
@@ -241,5 +306,7 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
+
+
 
 
