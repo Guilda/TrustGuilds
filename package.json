@@ -1,11 +1,11 @@
 {
-  "name": "dataclient",
+  "name": "patchdeck",
   "description": "",
   "version": "0.0.0",
-  "homepage": "https://github.com/dominictarr/dataclient",
+  "homepage": "https://github.com/dominictarr/patchdeck",
   "repository": {
     "type": "git",
-    "url": "git://github.com/dominictarr/dataclient.git"
+    "url": "git://github.com/dominictarr/patchdeck.git"
   },
   "dependencies": {
     "column-deck": "0.0.0",
