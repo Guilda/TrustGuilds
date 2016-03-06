@@ -1,15 +1,21 @@
 # dataclient
 
-A minimal sbot client.
-
-run with [electro](https://www.npmjs.com/package/electro):
+A minimal sbot client, in the tweetdeck tradition.
 
 ```
-npm install -g electro
-electro index.js
+git clone https://github.com/dominictarr/patchdeck.git
+cd patchdeck
+npm install
+npm start
 ```
+
 
 ## License
 
 MIT
+
+
+
+
+
 
