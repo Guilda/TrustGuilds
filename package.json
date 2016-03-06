@@ -9,12 +9,17 @@
   },
   "dependencies": {
     "column-deck": "0.0.0",
+    "electro": "0.0.5",
     "marked": "^0.3.5",
     "moment": "^2.11.0",
+    "scuttlebot": "^7.5.3",
+    "ssb-http": "0.0.0",
+    "ssb-links": "^1.0.1",
     "suggest-box": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node server.js & electro index.js",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
