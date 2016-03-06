@@ -7,6 +7,7 @@ var h = require('hyperscript')
 var ssbc = require('ssb-client')
 var markdown = require('ssb-markdown')
 var Cat = require('pull-cat')
+var mentions = require('ssb-mentions')
 
 var suggest = require('suggest-box')
 
@@ -230,8 +231,13 @@ function createPanel (stream) {
             }
             lightbox.center()
           }),
+
           click('publish', function () {
-            alert(ta.value)
+            var content = {type: 'post', text: ta.value, mentions: mentions(ta.value)}
+            sbot.publish(content, function (err, msg) {
+              alert('published: '+ msg.key || JSON.stringify(msg))
+              lightbox.close()
+            })
           })
         ))
 
@@ -258,7 +264,6 @@ function createPanel (stream) {
               ary = ary
               .filter(function (e) {
                 if(!embed) return true
-                console.log(e.name, /\.(gif|jpg|png|svg)$/i.test(e.name))
                 return /\.(gif|jpg|png|svg)$/i.test(e.name)
               }).sort(function (a, b) {
                 return b.count - a.count
@@ -306,7 +311,6 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
-
 
 
 
