@@ -1,5 +1,5 @@
 var start = Date.now()
-
+var defer = require('pull-defer')
 var observ = require('observable')
 var pull = require('pull-stream')
 var Scroll = require('pull-scroll')
@@ -142,27 +142,28 @@ var streams = {
     return sbot.createUserStream({ id: id, reverse: true })
   },
   thread: function (root) {
-    return pull(once(function (cb) {
-        pull(
-          Cat([
-            once(function (cb) {
-              sbot.get(root, function (err, value) {
-                cb(err, {key: root, value: value})
-              })
-            }),
-            sbot.links({rel: 'root', dest: root, values: true, keys: true})
-          ]),
-          pull.collect(cb)
-        )
-      }),
-      //TODO: sort by cryptographic causal ordering.
-      pull.map(function (ary) {
-        return ary.sort(function (a, b) {
+    var source = defer.source()
+    pull(
+      Cat([
+        once(function (cb) {
+          sbot.get(root, function (err, value) {
+            cb(err, {key: root, value: value})
+          })
+        }),
+        sbot.links({rel: 'root', dest: root, values: true, keys: true})
+      ]),
+      pull.collect(function (err, thread) {
+        thread.sort(function (a, b) {
+          //THIS IS WRONG AND HAS KNOWN BUGS!!!
+          //TODO: sort by cryptographic causal ordering.
           return a.value.timestamp - b.value.timestamp
         })
-      }),
-      pull.flatten()
+        console.log(thread)
+        source.resolve(pull.values(thread))
+      })
     )
+
+    return source
   }
 }
 
@@ -311,6 +312,4 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
-
-
 
