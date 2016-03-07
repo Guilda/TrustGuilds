@@ -64,6 +64,12 @@ function first(stream, cb) {
 
 function name (id) {
   var n = h('span', id.substring(0, 10))
+  //choose the most popular name for this person.
+  //for anything like this you'll see I have used sbot.links2
+  //which is the ssb-links plugin. as you'll see the query interface
+  //is pretty powerful!
+  //TODO: "most popular" name is easily gameable.
+  //must come up with something better than this.
   first(
     sbot.links2.read({query: [
       {$filter: {rel: ['mentions', {$prefix: '@'}], dest: id}},
@@ -80,6 +86,7 @@ function name (id) {
   return n
 }
 
+//show how many people have voted, replied, or mentioned this message.
 function stats (id) {
   var span = h('span')
   first(
@@ -142,6 +149,8 @@ var streams = {
     return sbot.createUserStream({ id: id, reverse: true })
   },
   thread: function (root) {
+    //in this case, it's inconvienent that panel only takes
+    //a stream. maybe it would be better to accept an array?
     var source = defer.source()
     pull(
       Cat([
@@ -200,6 +209,22 @@ function render (data) {
   ), h('hr'))
 }
 
+//create a panel (column) from a stream of messages.
+//a stream has several advantages, for example,
+//messages that don't need to be displayed yet won't
+//be rendered, so it's gentler on the database.
+//
+//it's probably not ideal to just treat everything
+//as a scolling column, for example, on a user feed
+//we should show some "profile" information at the top.
+//
+//and for a thread, we want a composer to appear at the _bottom_
+//(after you have read the whole thread)
+//
+//but the best thing about just making it a stream,
+//is that I want to make a column be a rendering of any database query.
+//(TODO, expand on the patterns in ssb-links)
+
 function createPanel (stream) {
   var scroll = h('div', {
     style: {
@@ -211,12 +236,20 @@ function createPanel (stream) {
     }
   })
 
+
   var stack = Stack()
     .addFixed(h('h3', 'feed', {style: {background: 'grey'}},
+      //UGLY: it's really ugly that I put the whole composer
+      //just inline like this. this should really be refactored
+      //out completely. maybe into it's own repo?
+      //I don't have support for thread replies yet.
+      //those would need to be more coupled to the messages in the
+      //thread because they would need to get the most recent message
+      //for the branch link.
       click('post', function () {
         var ta = h('textarea', {rows: 20, cols: 80})
         var prev = h('span')
-        
+
         var tog
         lightbox.show(h('span',
           tog = h('div', ta),
