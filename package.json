@@ -10,12 +10,15 @@
   "dependencies": {
     "column-deck": "0.0.0",
     "electro": "0.0.5",
+    "electron-prebuilt": "^0.36.9",
     "marked": "^0.3.5",
     "moment": "^2.11.0",
     "pull-defer": "^0.2.1",
-    "scuttlebot": "^7.5.3",
+    "pull-identify-filetype": "^1.0.2",
+    "scuttlebot": "^7.5.4",
     "ssb-http": "0.0.0",
     "ssb-links": "^1.0.1",
+    "stack": "^0.1.0",
     "suggest-box": "^2.0.0"
   },
   "devDependencies": {},
