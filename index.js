@@ -202,39 +202,7 @@ var streams = {
 
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
-  console.log(data);
-  
-  return Jade(data, view.post)
-
-  // return h('span', h('div.post',
-  //   h('div.title',
-  //     click(
-  //       name(data.value.author),
-  //       function () {
-  //         createPanel(streams.user(data.value.author))
-  //       }
-  //     ),
-  //     ' ',
-  //     h('label', data.value.content.type || 'encrypted'),
-  //     ' ',
-  //     click(
-  //       moment(data.value.timestamp).fromNow(),
-  //       function () {
-  //         createPanel(streams.thread(data.value.content.root || data.key))
-  //       }
-  //     )
-  //   ),
-  //   h('div', {
-  //       style: {width: px(450), overflow: 'hidden'}
-  //     },
-  //     data.value.content.text ? (function () {
-  //       var text = h('div')
-  //       text.innerHTML = markdown.block(data.value.content.text, data.value.content.mentions)
-  //       return text
-  //     })() : h('pre', JSON.stringify(data.value.content))
-  //   ),
-  //   feedback(data.key)
-  // ), h('hr'))
+  return Jade({ data: data, moment: moment }, view.post)
 }
 
 //create a panel (column) from a stream of messages.
@@ -426,6 +394,10 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
+
+
+
 
 
 

@@ -38,7 +38,7 @@
     "browserify": "^13.0.0"
   },
   "scripts": {
-    "build": "browserify -t brfs index.js | indexhtmlify --style static/style.css > static/index.html",
+    "build": "browserify -t brfs index.js | indexhtmlify --style static/bootstrap.min.css > static/index.html",
     "start": "node server.js & electro index.js",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
