@@ -379,7 +379,7 @@ function createPanel (el, stream) {
 
 require('./reconnect')(function (cb) {
   var ws = WS.connect('ws://localhost:8000/')
-  sbot = window.CLIENT = 
+  sbot = window.CLIENT =
     MuxRpc(require('./manifest.json'), null, Serializer)()
 
   pull(ws, sbot.createStream(), pull.through(null, cb), ws)
@@ -391,13 +391,3 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
-
-
-
-
-
-
-
-
-
-
