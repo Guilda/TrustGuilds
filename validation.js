@@ -28,7 +28,6 @@ function isNumber (n) {
 }
 
 exports.curation = function (content) {
-
   valid(content.type === 'curation', 'content.type must be: "curation"')
   valid(isString(content.curate), 'content.curate link missing')
   valid(isLength(content.title, 60) && 'content.title must be string < 60 chars')
