@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "column-deck": "0.0.0",
-    "eccjs": "^0.3.1",
+    "ecstatic": "^1.4.0",
     "electro": "0.0.5",
     "electron-prebuilt": "^0.36.10",
     "jade": "^1.11.0",
@@ -36,13 +36,14 @@
   },
   "devDependencies": {
     "brfs": "^1.4.3",
-    "browserify": "^13.0.0"
+    "browserify": "^13.0.0",
+    "watchify": "^3.7.0"
   },
   "scripts": {
-    "build": "browserify -t brfs index.js | indexhtmlify --style static/bootstrap.min.css > static/index.html",
-    "start": "node server.js & electro index.js",
+    "build": "browserify -t brfs index.js > static/bundle.js",
+    "start": "node server.js; echo open UI at http://localhost:8000/",
     "test": "set -e; for t in test/*.js; do node $t; done",
-    "watch": "watchify server.js -o static/index.html -dv"
+    "watch": "watchify server.js -o static/bundle.js -dv"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"

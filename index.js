@@ -19,8 +19,6 @@ var path = require('path')
 var API = require('./api')
 
 var suggest = require('suggest-box')
-
-var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
@@ -42,7 +40,6 @@ function Jade (data, template){
   return new_page_element;
 }
 
-var dock = Columns({width: 600, margin: 20})
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
@@ -101,8 +98,6 @@ document.body.appendChild(lightbox)
 
 var status = require('./status')()
 document.body.appendChild(status)
-
-//document.body.appendChild(dock)
 
 function click(name, action, class_names) {
   return h('a', {href: '#', onclick: action, className: class_names}, name)
@@ -402,17 +397,11 @@ function createPanel (el, stream) {
             }
           )
         })
-      }),
-      ' ',
-      click('close', function () {
-        dock.remove(stack)
       })
     ))
     .addFitted(scroll)
 
     el.appendChild(stack)
-
-//  dock.add(stack)
 
   pull(
     stream,
@@ -438,3 +427,10 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
+
+
+
+
+
+
