@@ -4,6 +4,24 @@ var pull = require('pull-stream')
 //all curations
 module.exports = function (sbot) {
   return {
+    tags: function (opts) {
+      return pull(
+        sbot.query.read({query: [
+          {$filter: {value: {content: {
+            type: "curation",
+            curate: {$prefix: ''}
+          }}}},
+          {$map: ['value', 'content', 'tags']}
+        ]}),
+        pull.flatten(),
+        pull.map(function (e) {
+          return e.split(/[ ,]+/)
+        }),
+        pull.flatten(),
+        pull.filter(v.isTag)
+      )
+    },
+
     //all curations.
     curations: function (opts) {
       var tags = []
@@ -26,6 +44,7 @@ module.exports = function (sbot) {
     }
   }
 }
+
 
 
 
