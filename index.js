@@ -206,6 +206,8 @@ function render (data) {
   if(!data.value) throw new Error('data missing value property')
   // console.log(data);
 
+  data = { data: data, moment: moment }
+
   return Jade(data, "view/post.jade")
 
   // return h('span', h('div.post',
