@@ -9,6 +9,9 @@ var markdown = require('ssb-markdown')
 var Cat = require('pull-cat')
 var mentions = require('ssb-mentions')
 
+var fs = require('fs')
+var path = require('path')
+
 var API = require('./api')
 
 var suggest = require('suggest-box')
@@ -21,6 +24,17 @@ var jade = require('jade')
 
 function px (n) { return n+'px' }
 
+
+// With this data, render the given template at path
+function Jade (data, template_path){
+  var rendered_page = jade.renderFile(template_path, data);
+  var new_page_element = document.createElement('span')
+
+  new_page_element.innerHTML = rendered_page;
+
+  return new_page_element;
+}
+
 var dock = Columns({width: 600, margin: 20})
 
 document.body.style.margin = px(0)
@@ -28,13 +42,17 @@ document.body.style.padding = px(0)
 
 document.body.appendChild(h('style', '.selected { color: red };'))
 
+document.body.appendChild(h('style',
+  fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8')
+))
+
 var lightbox = require('./lightbox')()
 document.body.appendChild(lightbox)
 
 var status = require('./status')()
 document.body.appendChild(status)
 
-document.body.appendChild(dock)
+//document.body.appendChild(dock)
 
 function click(name, action) {
   return h('a', {href: '#', onclick: action}, name)
@@ -179,22 +197,11 @@ var streams = {
   }
 }
 
-
-// With this data, render the given template at path
-function renderWithTemplate(data, template_path){
-  var rendered_page = jade.renderFile(template_path, data);
-  var new_page_element = document.createElement('span')
-
-  new_page_element.innerHTML = rendered_page;
-
-  return new_page_element;
-}
-
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
   // console.log(data);
 
-  return renderWithTemplate(data, "view/post.jade")
+  return Jade(data, "view/post.jade")
 
   // return h('span', h('div.post',
   //   h('div.title',
@@ -243,7 +250,7 @@ function render (data) {
 //is that I want to make a column be a rendering of any database query.
 //(TODO, expand on the patterns in ssb-links)
 
-function createPanel (stream) {
+function createPanel (el, stream) {
   var scroll = h('div', {
     style: {
       width: px(500),
@@ -254,6 +261,7 @@ function createPanel (stream) {
     }
   })
 
+  el.innerHTML = ''
 
   var stack = Stack()
     .addFixed(h('h3', 'feed', {style: {background: 'grey'}},
@@ -338,7 +346,9 @@ function createPanel (stream) {
     ))
     .addFitted(scroll)
 
-  dock.add(stack)
+    el.appendChild(stack)
+
+//  dock.add(stack)
 
   pull(
     stream,
@@ -361,5 +371,14 @@ ssbc(function (err, _sbot) {
   }
   console.log('connected...', Date.now() - start)
   sbot = _sbot
-  createPanel(streams.all())
+  var el = Jade(null, 'view/layout.jade')
+  document.body.appendChild(el)
+  var content = el.querySelector('#content')
+  console.log()
+  createPanel(content, streams.all())
+//  createPanel(streams.all())
 })
+
+
+
+
