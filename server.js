@@ -18,11 +18,13 @@ var createSbot = require('scuttlebot')
   .use(require('scuttlebot/plugins/logging'))
   .use(require('scuttlebot/plugins/private'))
   .use(require('ssb-links'))
+  .use(require('ssb-query'))
   .use(require('ssb-http'))
 
 config.keys = keys
 var server = createSbot(config)
 fs.writeFileSync(manifestFile, JSON.stringify(server.getManifest(), null, 2))
+
 
 
 
