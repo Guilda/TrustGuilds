@@ -22,6 +22,8 @@ var Stack = require('column-deck/stack')
 var moment = require('moment')
 var jade = require('jade')
 
+var validation = require('validation')
+
 function px (n) { return n+'px' }
 
 
@@ -57,8 +59,8 @@ document.body.appendChild(status)
 
 //document.body.appendChild(dock)
 
-function click(name, action) {
-  return h('a', {href: '#', onclick: action}, name)
+function click(name, action, class_names) {
+  return h('a', {href: '#', onclick: action, className: class_names}, name)
 }
 
 function maxKey (obj) {
@@ -156,7 +158,7 @@ function feedback (id) {
 
 function toggle(off, on, change) {
   var state = false
-  var a = h('a', {href: '#', onclick: function () {
+  var a = h('a', {className: "btn btn-default", href: '#', onclick: function () {
     state = !state
     a.innerText = state ? on : off
     change(state)
@@ -305,7 +307,7 @@ function createPanel (el, stream) {
         lightbox.show(h('span',
           tog = h('div', form),
           h('br'),
-          click('cancel', lightbox.close),
+          click('cancel', lightbox.close, 'btn btn-warning'),
           ' ',
           toggle('preview', 'edit', function (state) {
             tog.innerHTML = ''
@@ -317,7 +319,7 @@ function createPanel (el, stream) {
               tog.appendChild(prev)
             }
             lightbox.center()
-          }),
+          }, 'btn btn-default'),
 
           click('publish', function () {
 
@@ -331,7 +333,7 @@ function createPanel (el, stream) {
 
             // If valid, publish this curation
             try{
-              curation(content)
+              validation.curation(content)
 
               sbot.publish(content, function (err, msg) {
                 alert('published: '+ msg.key || JSON.stringify(msg))
@@ -341,7 +343,7 @@ function createPanel (el, stream) {
             catch(error){
               alert(error);
             }
-          })
+          }, 'btn btn-success')
         ))
 
         suggest(summary, function (word, cb) {
