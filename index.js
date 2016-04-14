@@ -276,21 +276,21 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var title = h('input', {type: 'text'})
+        var title = h('input', {type: 'text', class: "form-control"})
         var title_bundle = h('label', "title", title)
 
-        var summary = h('textarea', {rows: 20, cols: 80})
+        var summary = h('textarea', {rows: 20, cols: 80, class: "form-control"})
         var summary_bundle = h('label', "summary", summary)
 
-        var one_liner = h('textarea', {rows: 2, cols: 80})
+        var one_liner = h('textarea', {rows: 2, cols: 80, class: "form-control"})
         var one_liner_bundle = h('label', "one liner", one_liner)
 
-        var tags = h('input', {type: 'text'})
+        var tags = h('input', {type: 'text', class: "form-control"})
         var tags_bundle = h('label', "tags", tags)
 
         var prev = h('span')
 
-        var form = h('form')
+        var form = h('form', h('div', {class: 'form-group'}))
 
         form.appendChild(title_bundle)
         form.appendChild(one_liner_bundle)
@@ -316,17 +316,27 @@ function createPanel (el, stream) {
           }),
 
           click('publish', function () {
+
             var content = {
               type: 'curation',
               summary: summary.value,
               mentions: mentions(summary.value),
-              one_liner: one_liner.value,
+              oneLiner: one_liner.value,
               tags: tags.value.split()
             }
-            sbot.publish(content, function (err, msg) {
-              alert('published: '+ msg.key || JSON.stringify(msg))
-              lightbox.close()
-            })
+
+            // If valid, publish this curation
+            try{
+              curation(content)
+
+              sbot.publish(content, function (err, msg) {
+                alert('published: '+ msg.key || JSON.stringify(msg))
+                lightbox.close()
+              })
+            }
+            catch(error){
+              alert(error);
+            }
           })
         ))
 
