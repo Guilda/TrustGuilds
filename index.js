@@ -45,6 +45,9 @@ document.body.appendChild(h('style', '.selected { color: red };'))
 document.body.appendChild(h('style',
   fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8')
 ))
+document.body.appendChild(h('style',
+  fs.readFileSync(path.join(__dirname, 'bootstrap.min.css'), 'utf8')
+))
 
 var lightbox = require('./lightbox')()
 document.body.appendChild(lightbox)
@@ -273,28 +276,45 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var ta = h('textarea', {rows: 20, cols: 80})
-        var one_liner = h('textarea', {rows: 2, cols: 80})
+        var title = h('label', "title", h('input', {type: 'text'}))
+        var summary = h('label', "summary", h('textarea', {rows: 20, cols: 80}))
+        var one_liner = h('label', "one liner", h('textarea', {rows: 2, cols: 80}))
+        var tags = h('label', "tags", h('input', {type: 'text'}))
         var prev = h('span')
+
+        var form = h('form')
+
+        form.appendChild(title)
+        form.appendChild(summary)
+        form.appendChild(one_liner)
+        form.appendChild(tags)
 
         var tog
         lightbox.show(h('span',
-          tog = h('div', ta),
+          tog = h('div', form),
           h('br'),
           click('cancel', lightbox.close),
           ' ',
           toggle('preview', 'edit', function (state) {
             tog.innerHTML = ''
-            if(!state) tog.appendChild(ta)
+            if(!state){
+              tog.appendChild(form)
+            }
             else {
-              prev.innerHTML = markdown.block(ta.value)
+              prev.innerHTML = markdown.block(summary.value)
               tog.appendChild(prev)
             }
             lightbox.center()
           }),
 
           click('publish', function () {
-            var content = {type: 'curation', text: ta.value, mentions: mentions(ta.value)}
+            var content = {
+              type: 'curation',
+              summary: summary.value,
+              mentions: mentions(summary.value),
+              one_liner: one_liner.value,
+              tags: tags.value.split()
+            }
             sbot.publish(content, function (err, msg) {
               alert('published: '+ msg.key || JSON.stringify(msg))
               lightbox.close()
@@ -302,7 +322,7 @@ function createPanel (el, stream) {
           })
         ))
 
-        suggest(ta, function (word, cb) {
+        suggest(summary, function (word, cb) {
           if(!/^[@%&!]/.test(word[0])) return cb()
           if(word.length < 2) return cb()
 
@@ -379,7 +399,3 @@ ssbc(function (err, _sbot) {
   createPanel(content, streams.all())
 //  createPanel(streams.all())
 })
-
-
-
-
