@@ -183,7 +183,7 @@ var streams = {
 // With this data, render the given template at path
 function renderWithTemplate(data, template_path){
   var rendered_page = jade.renderFile(template_path, data);
-  var new_page_element = document.createElement('div')
+  var new_page_element = document.createElement('span')
 
   new_page_element.innerHTML = rendered_page;
 

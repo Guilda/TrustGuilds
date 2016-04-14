@@ -1,11 +1,21 @@
 .post
   .title
+    h3 #{value.content.title}
+    p #{value.content.oneLiner}
+
     a(href="#")
       span #{ value.author }
+    a(href="#")
+      span #{ value.credits }
+    
     if value.content
-      label #{ value.content.type }
-    #{ value.timestamp }
-    a(href="#") Time
-    div(style: "width: 450px; overflow: hidden;")
-      pre
-        #{ value }
+      label #{ value.content.type || 'encrypted' }
+    
+    a(href="#") #{ value.timestamp }
+  div(style: "width: 450px; overflow: hidden;")
+  
+    p.summary #{ value.content.summary }
+    
+    each tag in value.content.tags 
+      span.tag= tag
+    //- p #{JSON.stringify(value.content)}
