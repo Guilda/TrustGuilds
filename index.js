@@ -43,11 +43,51 @@ function Jade (data, template){
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
+
+// Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
   window.onhashchange = function(){
-    console.log("hash change");
-    console.log(location.hash);
+    chunks = location.hash.split("/")
+
+    var type = chunks[0]
+    var singular = chunks[1]
+
+    if(type === "#t")
+    {
+      render_tag(singular);
+    }
+    else if (type === "#u") {
+      render_person(singular);
+    }
   }
+}
+
+function render_tag(tag)
+{
+  console.log("render_tag " + tag)
+
+
+}
+
+function render_person(person)
+{
+  console.log("render_person " + person)
+
+  var content = document.body.querySelector('#content')
+  content.innerHTML = ""
+
+  console.log("About to pull omg")
+
+  pull( streams.user(person), pull.through( function(chunk){
+    console.log(chunk)
+  }, function(e){ console.log("STREAM CLOSED")}))
+
+
+  console.log("DONE")
+
+
+  // console.log(streams.user(person));
+  createPanel(content, streams.user(person))
 }
 
 
