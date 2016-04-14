@@ -260,11 +260,8 @@ function render (data) {
 function createPanel (el, stream) {
   var scroll = h('div', {
     style: {
-      width: px(500),
-      height: px(500), //MAGIC.
-      margin: px(0),
-      padding: px(0),
-      overflow: 'scroll',
+      height: '100%', //MAGIC.
+      overflow: 'scroll'
     }
   })
 
