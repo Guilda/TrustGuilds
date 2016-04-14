@@ -31,7 +31,7 @@ module.exports = function (sbot) {
 
 
 
-},{"./validation":143,"pull-stream":105}],2:[function(require,module,exports){
+},{"./validation":141,"pull-stream":103}],2:[function(require,module,exports){
 (function (Buffer){
 var MuxRpc = require('muxrpc')
 var Serializer = require('pull-serializer')
@@ -54,8 +54,6 @@ var path = require('path')
 var API = require('./api')
 
 var suggest = require('suggest-box')
-
-var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
@@ -77,14 +75,15 @@ function Jade (data, template){
   return new_page_element;
 }
 
-var dock = Columns({width: 600, margin: 20})
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
-// window.onhashchange(function(){
-//   console.log("hash change")
-// })
-
+if ("onhashchange" in window) {
+  window.onhashchange = function(){
+    console.log("hash change");
+    console.log(location.hash);
+  }
+}
 
 
 document.body.appendChild(h('style', '.selected { color: red };'))
@@ -94,8 +93,6 @@ document.body.appendChild(lightbox)
 
 var status = require('./status')()
 document.body.appendChild(status)
-
-//document.body.appendChild(dock)
 
 function click(name, action, class_names) {
   return h('a', {href: '#', onclick: action, className: class_names}, name)
@@ -395,17 +392,11 @@ function createPanel (el, stream) {
             }
           )
         })
-      }),
-      ' ',
-      click('close', function () {
-        dock.remove(stack)
       })
     ))
     .addFitted(scroll)
 
     el.appendChild(stack)
-
-//  dock.add(stack)
 
   pull(
     stream,
@@ -432,8 +423,15 @@ require('./reconnect')(function (cb) {
 
 })
 
+
+
+
+
+
+
+
 }).call(this,require("buffer").Buffer)
-},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":141,"./status":142,"./validation":143,"buffer":16,"column-deck":22,"column-deck/stack":23,"hyperscript":29,"jade":39,"moment":61,"muxrpc":63,"observable":74,"path":77,"pull-cat":80,"pull-defer":83,"pull-scroll":92,"pull-serializer":98,"pull-stream":105,"pull-ws-server/client":112,"ssb-markdown":121,"ssb-mentions":123,"suggest-box":128}],3:[function(require,module,exports){
+},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":139,"./status":140,"./validation":141,"buffer":16,"column-deck/stack":21,"hyperscript":27,"jade":37,"moment":59,"muxrpc":61,"observable":72,"path":75,"pull-cat":78,"pull-defer":81,"pull-scroll":90,"pull-serializer":96,"pull-stream":103,"pull-ws-server/client":110,"ssb-markdown":119,"ssb-mentions":121,"suggest-box":126}],3:[function(require,module,exports){
 var h = require('hyperscript')
 
 function width (el) {
@@ -473,7 +471,7 @@ module.exports = function () {
 }
 
 
-},{"hyperscript":29}],4:[function(require,module,exports){
+},{"hyperscript":27}],4:[function(require,module,exports){
 module.exports={
   "auth": "async",
   "address": "sync",
@@ -4693,7 +4691,7 @@ BufferList.prototype.destroy = function destroy () {
 module.exports = BufferList
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":16,"readable-stream/duplex":10,"util":135}],9:[function(require,module,exports){
+},{"buffer":16,"readable-stream/duplex":10,"util":133}],9:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
@@ -4779,7 +4777,7 @@ function forEach(xs, f) {
     f(xs[i], i);
   }
 }
-},{"./_stream_readable":12,"./_stream_writable":13,"core-util-is":25,"inherits":32,"process-nextick-args":78}],12:[function(require,module,exports){
+},{"./_stream_readable":12,"./_stream_writable":13,"core-util-is":23,"inherits":30,"process-nextick-args":76}],12:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -5662,7 +5660,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":11,"_process":79,"buffer":16,"core-util-is":25,"events":27,"inherits":32,"isarray":9,"process-nextick-args":78,"string_decoder/":126,"util":14}],13:[function(require,module,exports){
+},{"./_stream_duplex":11,"_process":77,"buffer":16,"core-util-is":23,"events":25,"inherits":30,"isarray":9,"process-nextick-args":76,"string_decoder/":124,"util":14}],13:[function(require,module,exports){
 (function (process){
 // A bit simpler than readable streams.
 // Implement an async ._write(chunk, encoding, cb), and it'll handle all
@@ -6181,7 +6179,7 @@ function CorkedRequest(state) {
   };
 }
 }).call(this,require('_process'))
-},{"./_stream_duplex":11,"_process":79,"buffer":16,"core-util-is":25,"events":27,"inherits":32,"process-nextick-args":78,"util-deprecate":133}],14:[function(require,module,exports){
+},{"./_stream_duplex":11,"_process":77,"buffer":16,"core-util-is":23,"events":25,"inherits":30,"process-nextick-args":76,"util-deprecate":131}],14:[function(require,module,exports){
 
 },{}],15:[function(require,module,exports){
 /*!
@@ -7751,7 +7749,7 @@ function blitBuffer (src, dst, offset, length) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":17,"ieee754":30,"isarray":18}],17:[function(require,module,exports){
+},{"base64-js":17,"ieee754":28,"isarray":18}],17:[function(require,module,exports){
 'use strict'
 
 exports.toByteArray = toByteArray
@@ -8198,110 +8196,7 @@ function isTruthy(value) {
     return !!value
 }
 
-},{"indexof":31}],21:[function(require,module,exports){
-var h = require('hyperscript')
-//a container that is always the full height of the screen
-// and never allows a vertical scrollbar. (may be set to any width though)
-function px(n) { return n+'px' }
-
-var TEST = false
-function SMY () {
-  if(TEST) return
-  //chrome: detect the top scroll
-  if('undefined' === typeof window.scrollMaxY) {
-    TEST = true
-    scrollTo(scrollX, 1000)
-    var r = scrollY
-    scrollTo(scrollX, 0)
-    TEST = false
-    return r
-  }
-  //firefox: scrollMaxY
-  else
-    return window.scrollMaxY
-}
-
-function each(set, iter) {
-  for(var i = 0; i < set.length; i++)
-    iter(set[i], i, set)
-}
-
-module.exports = function () {
-  var dock = h('div'),  _height
-
-  dock.style.height = px(innerHeight)
-  if(SMY()) resize()
-  function resize () {
-    if(TEST) return
-    //the SMY seems to be sized by previous frame.
-    //this causes a problem when we are zooming in.
-    var smy = _height <= innerHeight ? Math.max(SMY() || 0, 0) : 0
-    var height = innerHeight - smy - 1
-    dock.style.height = px(height)
-    _height = height
-
-    //if this resize caused a scrollbar to appear, fix it.
-    //this will only happen the first time (so there is no recursion)
-//    var smy = SMY()
-//    console.log('smy', smy)
-//    if(smy != 0) resize()
-//    else
-      each(dock.children, function (el) {
-        console.log('resize', el.resize)
-        el.resize && el.resize(height)
-      })
-
-  }
-
-  window.onresize = resize
-  window.onscroll = function () {
-    if(!TEST && SMY()) resize()
-  }
-
-  return dock
-}
-
-
-
-
-
-},{"hyperscript":29}],22:[function(require,module,exports){
-function px(n) { return n+'px' }
-var container = require('./container')
-
-
-module.exports = function columns (opts) {
-  opts = opts || {}
-
-  var width = opts.width || 400
-  var margin = opts.margin || 20
-
-  var div = container()
-  div.style.display = 'flex'
-  div.style.flexFlow = 'row nowrap'
-  div.style.alignItems = 'stretch'
-
-  div.add = function (el) {
-    div.style.width = px((1+div.children.length)*width)
-    el.style.width = px(width - margin)
-    el.style.marginLeft = px(margin)
-    el.style.marginTop = px(0)
-
-    div.appendChild(el)
-
-    //scrollIntoView after a short delay to allow
-    //time to resize if vertical scrollbar was added.
-   setTimeout(function () {
-      el.scrollIntoView()
-    }, 10)
-  }
-
-  return div
-}
-
-
-
-},{"./container":21}],23:[function(require,module,exports){
+},{"indexof":29}],21:[function(require,module,exports){
 
 //fit a series of elements into another, with consistent sizing.
 
@@ -8386,7 +8281,7 @@ module.exports = function (opts) {
 
 
 
-},{"hyperscript":29}],24:[function(require,module,exports){
+},{"hyperscript":27}],22:[function(require,module,exports){
 'use strict'
 
 var acorn = require('acorn');
@@ -8488,7 +8383,7 @@ function isExpression(src) {
   }
 }
 
-},{"acorn":6,"acorn/dist/walk":7}],25:[function(require,module,exports){
+},{"acorn":6,"acorn/dist/walk":7}],23:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -8599,7 +8494,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":34}],26:[function(require,module,exports){
+},{"../../is-buffer/index.js":32}],24:[function(require,module,exports){
 // universal module definition: https://github.com/umdjs/umd/blob/master/returnExports.js#L41
 (function (root, factory) {
     if (typeof exports === 'object') {
@@ -8618,7 +8513,7 @@ function objectToString(o) {
     return {"100":{"character":"💯","syllables":3,"types":["noun"]},"1234":{"character":"🔢","syllables":4,"types":[]},"+1":{"character":"👍","syllables":2,"types":["interjection"]},"-1":{"character":"👎","syllables":3,"types":[]},"8ball":{"character":"🎱","syllables":2,"types":[]},"a":{"character":"🅰","syllables":1,"types":["noun","idiom","indefinite-article","preposition","auxiliary-verb","abbreviation"]},"ab":{"character":"🆎","syllables":1,"types":["noun"]},"abc":{"character":"🔤","syllables":3,"types":[]},"abcd":{"character":"🔡","syllables":4,"types":[]},"accept":{"character":"🉑","syllables":2,"types":["verb-transitive","verb-intransitive"]},"aerial_tramway":{"character":"🚡","syllables":3,"types":[]},"airplane":{"character":"✈️","syllables":2,"types":["noun"]},"alarm_clock":{"character":"⏰","syllables":3,"types":[]},"alien":{"character":"👽","syllables":3,"types":["adjective","noun","verb-transitive"]},"ambulance":{"character":"🚑","syllables":3,"types":["noun"]},"anchor":{"character":"⚓️","syllables":2,"types":["noun","verb-transitive","verb-intransitive"]},"angel":{"character":"👼","syllables":2,"types":["noun"]},"anger":{"character":"💢","syllables":2,"types":["noun","verb-transitive","verb-intransitive"]},"angry":{"character":"😠","syllables":2,"types":["adjective"]},"anguished":{"character":"😟","syllables":2,"types":["adjective"]},"ant":{"character":"🐜","syllables":1,"types":["noun","idiom"]},"apple":{"character":"🍎","syllables":2,"types":["noun","idiom"]},"aquarius":{"character":"♒️","syllables":4,"types":[]},"aries":{"character":"♈️","syllables":2,"types":[]},"arrow_backward":{"character":"◀️","syllables":4,"types":[]},"arrow_double_down":{"character":"⏬","syllables":5,"types":[]},"arrow_double_up":{"character":"⏫","syllables":5,"types":[]},"arrow_down":{"character":"⬇️","syllables":3,"types":[]},"arrow_down_small":{"character":"🔽","syllables":4,"types":[]},"arrow_forward":{"character":"▶️","syllables":4,"types":[]},"arrow_heading_down":{"character":"⤵️","syllables":5,"types":[]},"arrow_heading_up":{"character":"⤴️","syllables":5,"types":[]},"arrow_left":{"character":"⬅️","syllables":3,"types":[]},"arrow_lower_left":{"character":"↙️","syllables":5,"types":[]},"arrow_lower_right":{"character":"↘️","syllables":5,"types":[]},"arrow_right":{"character":"➡️","syllables":3,"types":[]},"arrow_right_hook":{"character":"↪️","syllables":4,"types":[]},"arrow_up":{"character":"⬆️","syllables":3,"types":[]},"arrow_up_down":{"character":"↕️","syllables":4,"types":[]},"arrow_up_small":{"character":"🔼","syllables":4,"types":[]},"arrow_upper_left":{"character":"↖️","syllables":5,"types":[]},"arrow_upper_right":{"character":"↗️","syllables":5,"types":[]},"arrows_clockwise":{"character":"🔃","syllables":4,"types":[]},"arrows_counterclockwise":{"character":"🔄","syllables":6,"types":[]},"art":{"character":"🎨","syllables":1,"types":["noun","verb"]},"articulated_lorry":{"character":"🚛","syllables":7,"types":[]},"astonished":{"character":"😲","syllables":3,"types":["adjective","verb"]},"atm":{"character":"🏧","syllables":3,"types":["abbreviation"]},"b":{"character":"🅱","syllables":1,"types":["noun","abbreviation"]},"baby":{"character":"👶","syllables":2,"types":["noun","adjective","verb-transitive"]},"baby_bottle":{"character":"🍼","syllables":4,"types":[]},"baby_chick":{"character":"🐤","syllables":3,"types":[]},"baby_symbol":{"character":"🚼","syllables":4,"types":[]},"baggage_claim":{"character":"🛄","syllables":3,"types":[]},"balloon":{"character":"🎈","syllables":2,"types":["noun","verb-intransitive","verb-transitive","adjective"]},"ballot_box_with_check":{"character":"☑️","syllables":5,"types":[]},"bamboo":{"character":"🎍","syllables":2,"types":["noun"]},"banana":{"character":"🍌","syllables":3,"types":["noun"]},"bangbang":{"character":"‼️","syllables":2,"types":[]},"bank":{"character":"🏦","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb"]},"bar_chart":{"character":"📊","syllables":2,"types":[]},"barber":{"character":"💈","syllables":2,"types":["noun","verb-transitive","verb-intransitive"]},"baseball":{"character":"⚾️","syllables":2,"types":["noun"]},"basketball":{"character":"🏀","syllables":3,"types":["noun"]},"bath":{"character":"🛀","syllables":1,"types":["noun"]},"bathtub":{"character":"🛁","syllables":2,"types":["noun"]},"battery":{"character":"🔋","syllables":3,"types":["noun"]},"bear":{"character":"🐻","syllables":1,"types":["verb-transitive","verb-intransitive","phrasal-verb","idiom","noun","adjective"]},"bee":{"character":"🐝","syllables":1,"types":["noun","idiom"]},"beer":{"character":"🍺","syllables":1,"types":["noun"]},"beers":{"character":"🍻","syllables":1,"types":["noun"]},"beetle":{"character":"🐞","syllables":2,"types":["noun","verb-intransitive","adjective"]},"beginner":{"character":"🔰","syllables":3,"types":["noun"]},"bell":{"character":"🔔","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"bento":{"character":"🍱","syllables":2,"types":["noun"]},"bicyclist":{"character":"🚴","syllables":3,"types":["noun"]},"bike":{"character":"🚲","syllables":1,"types":["noun","verb-intransitive"]},"bikini":{"character":"👙","syllables":3,"types":["noun"]},"bird":{"character":"🐦","syllables":1,"types":["noun","verb-intransitive","idiom"]},"birthday":{"character":"🎂","syllables":2,"types":["noun"]},"black_circle":{"character":"⚫","syllables":3,"types":[]},"black_joker":{"character":"🃏","syllables":3,"types":[]},"black_nib":{"character":"✒️","syllables":2,"types":[]},"black_square":{"character":"⬛️","syllables":2,"types":[]},"black_square_button":{"character":"🔲","syllables":4,"types":[]},"blossom":{"character":"🌼","syllables":2,"types":["noun","verb-intransitive"]},"blowfish":{"character":"🐡","syllables":2,"types":["noun"]},"blue_book":{"character":"📘","syllables":2,"types":[]},"blue_car":{"character":"🚙","syllables":2,"types":[]},"blue_heart":{"character":"💙","syllables":2,"types":[]},"blush":{"character":"😊","syllables":1,"types":["verb-intransitive","noun"]},"boar":{"character":"🐗","syllables":1,"types":["noun"]},"boat":{"character":"⛵️","syllables":1,"types":["noun","verb-intransitive","verb-transitive","idiom"]},"bomb":{"character":"💣","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"book":{"character":"📖","syllables":1,"types":["noun","verb-transitive","verb-intransitive","adjective","idiom"]},"bookmark":{"character":"🔖","syllables":2,"types":["noun"]},"bookmark_tabs":{"character":"📑","syllables":3,"types":[]},"books":{"character":"📚","syllables":1,"types":["noun","verb"]},"boom":{"character":"💥","syllables":1,"types":["verb-intransitive","verb-transitive","noun","idiom"]},"boot":{"character":"👢","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"bouquet":{"character":"💐","syllables":2,"types":["noun"]},"bow":{"character":"🙇","syllables":1,"types":["noun","verb-intransitive","verb-transitive","phrasal-verb","idiom"]},"bowling":{"character":"🎳","syllables":2,"types":["noun"]},"boy":{"character":"👦","syllables":1,"types":["noun","interjection"]},"bread":{"character":"🍞","syllables":1,"types":["noun","verb-transitive"]},"bride_with_veil":{"character":"👰","syllables":3,"types":[]},"bridge_at_night":{"character":"🌉","syllables":3,"types":[]},"briefcase":{"character":"💼","syllables":2,"types":["noun"]},"broken_heart":{"character":"💔","syllables":3,"types":[]},"bug":{"character":"🐛","syllables":1,"types":["noun","verb-intransitive","verb-transitive","phrasal-verb","idiom"]},"bulb":{"character":"💡","syllables":1,"types":["noun"]},"bullettrain_front":{"character":"🚆","syllables":4,"types":[]},"bullettrain_side":{"character":"🚅","syllables":4,"types":[]},"bus":{"character":"🚌","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"busstop":{"character":"🚏","syllables":2,"types":[]},"bust_in_silhouette":{"character":"👤","syllables":5,"types":[]},"busts_in_silhouette":{"character":"👥","syllables":5,"types":[]},"cactus":{"character":"🌵","syllables":2,"types":["noun"]},"cake":{"character":"🍰","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"calendar":{"character":"📆","syllables":3,"types":["noun","verb-transitive"]},"calling":{"character":"📲","syllables":2,"types":["noun"]},"camel":{"character":"🐫","syllables":2,"types":["noun"]},"camera":{"character":"📷","syllables":3,"types":["noun","idiom"]},"cancer":{"character":"♋️","syllables":2,"types":["noun"]},"candy":{"character":"🍬","syllables":2,"types":["noun","verb-transitive","verb-intransitive"]},"capital_abcd":{"character":"🔠","syllables":7,"types":[]},"capricorn":{"character":"♑️","syllables":3,"types":[]},"car":{"character":"🚗","syllables":1,"types":["noun"]},"card_index":{"character":"📇","syllables":3,"types":[]},"carousel_horse":{"character":"🎠","syllables":4,"types":[]},"cat":{"character":"🐱","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"cat2":{"character":"🐈","syllables":2,"types":[]},"cd":{"character":"💿","syllables":2,"types":["abbreviation"]},"chart":{"character":"💹","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"chart_with_downwards_trend":{"character":"📉","syllables":5,"types":[]},"chart_with_upwards_trend":{"character":"📈","syllables":5,"types":[]},"checkered_flag":{"character":"🏁","syllables":3,"types":[]},"cherries":{"character":"🍒","syllables":2,"types":["noun"]},"cherry_blossom":{"character":"🌸","syllables":4,"types":[]},"chestnut":{"character":"🌰","syllables":2,"types":["noun","adjective"]},"chicken":{"character":"🐔","syllables":2,"types":["noun","adjective","verb-intransitive"]},"children_crossing":{"character":"🚸","syllables":4,"types":[]},"chocolate_bar":{"character":"🍫","syllables":3,"types":[]},"christmas_tree":{"character":"🎄","syllables":3,"types":[]},"church":{"character":"⛪️","syllables":1,"types":["noun","verb-transitive","adjective"]},"cinema":{"character":"🎦","syllables":3,"types":["noun"]},"circus_tent":{"character":"🎪","syllables":3,"types":[]},"city_sunrise":{"character":"🌇","syllables":4,"types":[]},"city_sunset":{"character":"🌆","syllables":4,"types":[]},"cl":{"character":"🆑","syllables":2,"types":["abbreviation"]},"clap":{"character":"👏","syllables":1,"types":["verb-intransitive","verb-transitive","noun"]},"clapper":{"character":"🎬","syllables":2,"types":["noun"]},"clipboard":{"character":"📋","syllables":2,"types":["noun"]},"clock1":{"character":"🕐","syllables":2,"types":[]},"clock10":{"character":"🕙","syllables":2,"types":[]},"clock1030":{"character":"🕥","syllables":4,"types":[]},"clock11":{"character":"🕚","syllables":4,"types":[]},"clock1130":{"character":"🕦","syllables":6,"types":[]},"clock12":{"character":"🕛","syllables":2,"types":[]},"clock1230":{"character":"🕧","syllables":4,"types":[]},"clock130":{"character":"🕜","syllables":4,"types":[]},"clock2":{"character":"🕑","syllables":2,"types":[]},"clock230":{"character":"🕝","syllables":4,"types":[]},"clock3":{"character":"🕒","syllables":2,"types":[]},"clock330":{"character":"🕞","syllables":4,"types":[]},"clock4":{"character":"🕓","syllables":2,"types":[]},"clock430":{"character":"🕟","syllables":4,"types":[]},"clock5":{"character":"🕔","syllables":2,"types":[]},"clock530":{"character":"🕠","syllables":4,"types":[]},"clock6":{"character":"🕕","syllables":2,"types":[]},"clock630":{"character":"🕡","syllables":4,"types":[]},"clock7":{"character":"🕖","syllables":3,"types":[]},"clock730":{"character":"🕢","syllables":5,"types":[]},"clock8":{"character":"🕗","syllables":2,"types":[]},"clock830":{"character":"🕣","syllables":4,"types":[]},"clock9":{"character":"🕘","syllables":2,"types":[]},"clock930":{"character":"🕤","syllables":4,"types":[]},"closed_book":{"character":"📕","syllables":2,"types":[]},"closed_lock_with_key":{"character":"🔐","syllables":4,"types":[]},"closed_umbrella":{"character":"🌂","syllables":4,"types":[]},"cloud":{"character":"☁️","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"clubs":{"character":"♣️","syllables":1,"types":["verb","noun"]},"cn":{"character":"🇨🇳","syllables":2,"types":[]},"cocktail":{"character":"🍸","syllables":2,"types":["noun","adjective"]},"coffee":{"character":"☕️","syllables":2,"types":["noun"]},"cold_sweat":{"character":"😰","syllables":2,"types":[]},"collision":{"character":"💥","syllables":3,"types":["noun"]},"computer":{"character":"💻","syllables":3,"types":["noun"]},"confetti_ball":{"character":"🎊","syllables":4,"types":[]},"confounded":{"character":"😖","syllables":3,"types":["adjective"]},"confused":{"character":"😕","syllables":2,"types":["adjective"]},"congratulations":{"character":"㊗️","syllables":5,"types":["interjection","noun"]},"construction":{"character":"🚧","syllables":3,"types":["noun"]},"construction_worker":{"character":"👷","syllables":5,"types":[]},"convenience_store":{"character":"🏪","syllables":4,"types":[]},"cookie":{"character":"🍪","syllables":2,"types":["noun"]},"cool":{"character":"🆒","syllables":1,"types":["adjective","adverb","verb-transitive","verb-intransitive","noun","idiom"]},"cop":{"character":"👮","syllables":1,"types":["noun","verb-transitive","phrasal-verb","idiom"]},"copyright":{"character":"©","syllables":3,"types":["noun","adjective","verb-transitive"]},"corn":{"character":"🌽","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"couple":{"character":"👫","syllables":2,"types":["noun","verb-transitive","verb-intransitive","adjective"]},"couple_with_heart":{"character":"💑","syllables":4,"types":[]},"couplekiss":{"character":"💏","syllables":3,"types":[]},"cow":{"character":"🐮","syllables":1,"types":["noun","idiom","verb-transitive"]},"cow2":{"character":"🐄","syllables":2,"types":[]},"credit_card":{"character":"💳","syllables":3,"types":[]},"crocodile":{"character":"🐊","syllables":3,"types":["noun"]},"crossed_flags":{"character":"🎌","syllables":2,"types":[]},"crown":{"character":"👑","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"cry":{"character":"😢","syllables":1,"types":["verb-intransitive","verb-transitive","noun","phrasal-verb","idiom"]},"crying_cat_face":{"character":"😿","syllables":4,"types":[]},"crystal_ball":{"character":"🔮","syllables":3,"types":[]},"cupid":{"character":"💘","syllables":2,"types":["noun"]},"curly_loop":{"character":"➰","syllables":3,"types":[]},"currency_exchange":{"character":"💱","syllables":5,"types":[]},"curry":{"character":"🍛","syllables":2,"types":["verb-transitive","idiom","noun"]},"custard":{"character":"🍮","syllables":2,"types":["noun"]},"customs":{"character":"🛃","syllables":2,"types":["noun"]},"cyclone":{"character":"🌀","syllables":2,"types":["noun"]},"dancer":{"character":"💃","syllables":2,"types":["noun"]},"dancers":{"character":"👯","syllables":2,"types":["noun"]},"dango":{"character":"🍡","syllables":2,"types":[]},"dart":{"character":"🎯","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"dash":{"character":"💨","syllables":1,"types":["verb-transitive","verb-intransitive","noun"]},"date":{"character":"📅","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"de":{"character":"🇩🇪","syllables":1,"types":["noun","verb"]},"deciduous_tree":{"character":"🌳","syllables":5,"types":[]},"department_store":{"character":"🏬","syllables":4,"types":[]},"diamond_shape_with_a_dot_inside":{"character":"💠","syllables":8,"types":[]},"diamonds":{"character":"♦️","syllables":2,"types":["noun","verb"]},"disappointed":{"character":"😞","syllables":4,"types":["adjective"]},"disappointed_relieved":{"character":"😥","syllables":6,"types":[]},"dizzy":{"character":"💫","syllables":2,"types":["adjective","verb-transitive"]},"dizzy_face":{"character":"😵","syllables":3,"types":[]},"do_not_litter":{"character":"🚯","syllables":4,"types":[]},"dog":{"character":"🐶","syllables":1,"types":["noun","adverb","verb-transitive","idiom"]},"dog2":{"character":"🐕","syllables":2,"types":[]},"dollar":{"character":"💵","syllables":2,"types":["noun"]},"dolls":{"character":"🎎","syllables":1,"types":["noun"]},"dolphin":{"character":"🐬","syllables":2,"types":["noun"]},"donut":{"character":"🍩","syllables":2,"types":["noun"]},"door":{"character":"🚪","syllables":1,"types":["noun","verb-transitive","idiom"]},"doughnut":{"character":"🍩","syllables":2,"types":["noun"]},"dragon":{"character":"🐉","syllables":2,"types":["noun"]},"dragon_face":{"character":"🐲","syllables":3,"types":[]},"dress":{"character":"👗","syllables":1,"types":["verb-transitive","verb-intransitive","noun","adjective","phrasal-verb","idiom"]},"dromedary_camel":{"character":"🐪","syllables":6,"types":[]},"droplet":{"character":"💧","syllables":2,"types":["noun"]},"dvd":{"character":"📀","syllables":3,"types":[]},"e-mail":{"character":"📧","syllables":2,"types":["noun","verb-transitive"]},"ear":{"character":"👂","syllables":1,"types":["noun","idiom","verb-intransitive"]},"ear_of_rice":{"character":"🌾","syllables":3,"types":[]},"earth_africa":{"character":"🌍","syllables":4,"types":[]},"earth_americas":{"character":"🌎","syllables":5,"types":[]},"earth_asia":{"character":"🌏","syllables":3,"types":[]},"egg":{"character":"🍳","syllables":1,"types":["noun","verb-transitive","idiom"]},"eggplant":{"character":"🍆","syllables":2,"types":["noun"]},"eight":{"character":"8️⃣","syllables":1,"types":["noun"]},"eight_pointed_black_star":{"character":"✴️","syllables":5,"types":[]},"eight_spoked_asterisk":{"character":"✳️","syllables":4,"types":[]},"electric_plug":{"character":"🔌","syllables":4,"types":[]},"elephant":{"character":"🐘","syllables":3,"types":["noun"]},"email":{"character":"📩","syllables":2,"types":["noun","verb"]},"end":{"character":"🔚","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"envelope":{"character":"✉️","syllables":3,"types":["noun","idiom"]},"es":{"character":"🇪🇸","syllables":1,"types":["noun"]},"euro":{"character":"💶","syllables":2,"types":["noun"]},"european_castle":{"character":"🏰","syllables":6,"types":[]},"european_post_office":{"character":"🏤","syllables":7,"types":[]},"evergreen_tree":{"character":"🌲","syllables":4,"types":[]},"exclamation":{"character":"❗️","syllables":4,"types":["noun"]},"expressionless":{"character":"😑","syllables":4,"types":["adjective"]},"eyeglasses":{"character":"👓","syllables":3,"types":["noun"]},"eyes":{"character":"👀","syllables":1,"types":["noun","verb"]},"facepunch":{"character":"👊","syllables":2,"types":[]},"factory":{"character":"🏭","syllables":3,"types":["noun"]},"fallen_leaf":{"character":"🍂","syllables":3,"types":[]},"family":{"character":"👪","syllables":3,"types":["noun","adjective"]},"fast_forward":{"character":"⏩","syllables":3,"types":[]},"fax":{"character":"📠","syllables":1,"types":["noun","verb-transitive"]},"fearful":{"character":"😨","syllables":2,"types":["adjective"]},"feet":{"character":"👣","syllables":1,"types":["noun"]},"ferris_wheel":{"character":"🎡","syllables":3,"types":[]},"file_folder":{"character":"📁","syllables":3,"types":[]},"fire":{"character":"🔥","syllables":2,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"fire_engine":{"character":"🚒","syllables":4,"types":[]},"fireworks":{"character":"🎆","syllables":2,"types":["noun"]},"first_quarter_moon":{"character":"🌓","syllables":4,"types":[]},"first_quarter_moon_with_face":{"character":"🌛","syllables":6,"types":[]},"fish":{"character":"🐟","syllables":1,"types":["noun","verb-intransitive","verb-transitive","phrasal-verb","idiom"]},"fish_cake":{"character":"🍥","syllables":2,"types":[]},"fishing_pole_and_fish":{"character":"🎣","syllables":5,"types":[]},"fist":{"character":"✊","syllables":1,"types":["noun","verb-transitive"]},"five":{"character":"5️⃣","syllables":1,"types":["noun"]},"flags":{"character":"🎏","syllables":1,"types":["noun"]},"flashlight":{"character":"🔦","syllables":2,"types":["noun"]},"floppy_disk":{"character":"💾","syllables":3,"types":[]},"flower_playing_cards":{"character":"🎴","syllables":5,"types":[]},"flushed":{"character":"😳","syllables":1,"types":["adjective","verb"]},"foggy":{"character":"🌁","syllables":2,"types":["adjective"]},"football":{"character":"🏈","syllables":2,"types":["noun"]},"fork_and_knife":{"character":"🍴","syllables":3,"types":[]},"fountain":{"character":"⛲️","syllables":2,"types":["noun","verb-transitive"]},"four":{"character":"4️⃣","syllables":1,"types":["noun","idiom"]},"four_leaf_clover":{"character":"🍀","syllables":4,"types":[]},"fr":{"character":"🇫🇷","syllables":2,"types":[]},"free":{"character":"🆓","syllables":1,"types":["adjective","adverb","verb-transitive","idiom"]},"fried_shrimp":{"character":"🍤","syllables":2,"types":[]},"fries":{"character":"🍟","syllables":1,"types":["verb","noun"]},"frog":{"character":"🐸","syllables":1,"types":["noun"]},"frowning":{"character":"😦","syllables":2,"types":["verb"]},"fuelpump":{"character":"⛽️","syllables":2,"types":[]},"full_moon":{"character":"🌕","syllables":2,"types":[]},"full_moon_with_face":{"character":"🌝","syllables":4,"types":[]},"game_die":{"character":"🎲","syllables":2,"types":[]},"gb":{"character":"🇬🇧","syllables":2,"types":[]},"gem":{"character":"💎","syllables":1,"types":["noun","verb-transitive"]},"gemini":{"character":"♊️","syllables":3,"types":[]},"ghost":{"character":"👻","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"gift":{"character":"🎁","syllables":1,"types":["noun","verb-transitive"]},"gift_heart":{"character":"💝","syllables":2,"types":[]},"girl":{"character":"👧","syllables":1,"types":["noun"]},"globe_with_meridians":{"character":"🌐","syllables":2,"types":[]},"goat":{"character":"🐐","syllables":1,"types":["noun"]},"golf":{"character":"⛳️","syllables":1,"types":["noun","verb-intransitive"]},"grapes":{"character":"🍇","syllables":1,"types":["noun"]},"green_apple":{"character":"🍏","syllables":3,"types":[]},"green_book":{"character":"📗","syllables":2,"types":[]},"green_heart":{"character":"💚","syllables":2,"types":[]},"grey_exclamation":{"character":"❕","syllables":5,"types":[]},"grey_question":{"character":"❔","syllables":3,"types":[]},"grimacing":{"character":"😬","syllables":3,"types":["verb"]},"grin":{"character":"😁","syllables":1,"types":["verb-intransitive","verb-transitive","noun"]},"grinning":{"character":"😀","syllables":2,"types":["verb"]},"guardsman":{"character":"💂","syllables":2,"types":["noun"]},"guitar":{"character":"🎸","syllables":2,"types":["noun"]},"gun":{"character":"🔫","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"haircut":{"character":"💇","syllables":2,"types":["noun"]},"hamburger":{"character":"🍔","syllables":3,"types":["noun"]},"hammer":{"character":"🔨","syllables":2,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"hamster":{"character":"🐹","syllables":2,"types":["noun"]},"hand":{"character":"✋","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"handbag":{"character":"👜","syllables":2,"types":["noun"]},"hankey":{"character":"💩","syllables":2,"types":["noun"]},"hash":{"character":"#️⃣","syllables":1,"types":["noun","verb-transitive","idiom"]},"hatched_chick":{"character":"🐥","syllables":2,"types":[]},"hatching_chick":{"character":"🐣","syllables":3,"types":[]},"headphones":{"character":"🎧","syllables":2,"types":["noun"]},"hear_no_evil":{"character":"🙉","syllables":4,"types":[]},"heart":{"character":"❤️","syllables":1,"types":["noun","verb-transitive","idiom"]},"heart_decoration":{"character":"💟","syllables":5,"types":[]},"heart_eyes":{"character":"😍","syllables":2,"types":[]},"heart_eyes_cat":{"character":"😻","syllables":3,"types":[]},"heartbeat":{"character":"💓","syllables":2,"types":["noun"]},"heartpulse":{"character":"💗","syllables":2,"types":[]},"hearts":{"character":"♥️","syllables":1,"types":["noun","verb"]},"heavy_check_mark":{"character":"✔️","syllables":4,"types":[]},"heavy_division_sign":{"character":"➗","syllables":6,"types":[]},"heavy_dollar_sign":{"character":"💲","syllables":5,"types":[]},"heavy_exclamation_mark":{"character":"❗️","syllables":7,"types":[]},"heavy_minus_sign":{"character":"➖","syllables":5,"types":[]},"heavy_multiplication_x":{"character":"✖️","syllables":8,"types":[]},"heavy_plus_sign":{"character":"➕","syllables":4,"types":[]},"helicopter":{"character":"🚁","syllables":4,"types":["noun","verb-transitive"]},"herb":{"character":"🌿","syllables":1,"types":["noun"]},"hibiscus":{"character":"🌺","syllables":3,"types":["noun"]},"high_brightness":{"character":"🔆","syllables":3,"types":[]},"high_heel":{"character":"👠","syllables":2,"types":[]},"hocho":{"character":"🔪","syllables":2,"types":[]},"honey_pot":{"character":"🍯","syllables":3,"types":[]},"honeybee":{"character":"🐝","syllables":3,"types":["noun"]},"horse":{"character":"🐴","syllables":1,"types":["noun","verb-transitive","verb-intransitive","adjective","phrasal-verb","idiom"]},"horse_racing":{"character":"🏇","syllables":3,"types":[]},"hospital":{"character":"🏥","syllables":3,"types":["noun"]},"hotel":{"character":"🏨","syllables":2,"types":["noun"]},"hotsprings":{"character":"♨️","syllables":2,"types":[]},"hourglass":{"character":"⌛️","syllables":3,"types":["noun","adjective"]},"hourglass_flowing_sand":{"character":"⏳","syllables":6,"types":[]},"house":{"character":"🏠","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"house_with_garden":{"character":"🏡","syllables":4,"types":[]},"hushed":{"character":"😧","syllables":1,"types":["adjective","verb"]},"ice_cream":{"character":"🍨","syllables":2,"types":[]},"icecream":{"character":"🍦","syllables":2,"types":["noun"]},"id":{"character":"🆔","syllables":1,"types":["noun"]},"ideograph_advantage":{"character":"🉐","syllables":3,"types":[]},"imp":{"character":"👿","syllables":1,"types":["noun","verb-transitive"]},"inbox_tray":{"character":"📥","syllables":1,"types":[]},"incoming_envelope":{"character":"📨","syllables":6,"types":[]},"information_desk_person":{"character":"💁","syllables":7,"types":[]},"information_source":{"character":"ℹ️","syllables":5,"types":[]},"innocent":{"character":"😇","syllables":3,"types":["adjective","noun"]},"interrobang":{"character":"⁉️","syllables":4,"types":["noun"]},"iphone":{"character":"📱","syllables":2,"types":[]},"it":{"character":"🇮🇹","syllables":1,"types":["pronoun","noun","idiom"]},"izakaya_lantern":{"character":"🏮","syllables":2,"types":[]},"jack_o_lantern":{"character":"🎃","syllables":4,"types":[]},"japan":{"character":"🗾","syllables":2,"types":["noun","verb-transitive"]},"japanese_castle":{"character":"🏯","syllables":5,"types":[]},"japanese_goblin":{"character":"👺","syllables":5,"types":[]},"japanese_ogre":{"character":"👹","syllables":5,"types":[]},"jeans":{"character":"👖","syllables":1,"types":["noun"]},"joy":{"character":"😂","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"joy_cat":{"character":"😹","syllables":2,"types":[]},"jp":{"character":"🇯🇵","syllables":2,"types":["abbreviation"]},"key":{"character":"🔑","syllables":1,"types":["noun","adjective","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"keycap_ten":{"character":"🔟","syllables":1,"types":[]},"kimono":{"character":"👘","syllables":3,"types":["noun"]},"kiss":{"character":"💋","syllables":1,"types":["verb-transitive","verb-intransitive","noun","phrasal-verb","idiom"]},"kissing":{"character":"😗","syllables":2,"types":["verb","adjective"]},"kissing_cat":{"character":"😽","syllables":3,"types":[]},"kissing_closed_eyes":{"character":"😚","syllables":4,"types":[]},"kissing_face":{"character":"😚","syllables":3,"types":[]},"kissing_heart":{"character":"😘","syllables":3,"types":[]},"kissing_smiling_eyes":{"character":"😙","syllables":5,"types":[]},"koala":{"character":"🐨","syllables":3,"types":["noun"]},"koko":{"character":"🈁","syllables":2,"types":["noun"]},"kr":{"character":"🇰🇷","syllables":2,"types":[]},"large_blue_circle":{"character":"🔵","syllables":4,"types":[]},"large_blue_diamond":{"character":"🔷","syllables":4,"types":[]},"large_orange_diamond":{"character":"🔶","syllables":5,"types":[]},"last_quarter_moon":{"character":"🌗","syllables":4,"types":[]},"last_quarter_moon_with_face":{"character":"🌜","syllables":6,"types":[]},"laughing":{"character":"😆","syllables":2,"types":["noun","verb"]},"leaves":{"character":"🍃","syllables":1,"types":["noun"]},"ledger":{"character":"📒","syllables":2,"types":["noun"]},"left_luggage":{"character":"🛅","syllables":3,"types":[]},"left_right_arrow":{"character":"↔️","syllables":4,"types":[]},"leftwards_arrow_with_hook":{"character":"↩️","syllables":4,"types":[]},"lemon":{"character":"🍋","syllables":2,"types":["noun","adjective"]},"leo":{"character":"♌️","syllables":2,"types":[]},"leopard":{"character":"🐆","syllables":2,"types":["noun"]},"libra":{"character":"♎️","syllables":2,"types":["noun"]},"light_rail":{"character":"🚈","syllables":2,"types":[]},"link":{"character":"🔗","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"lips":{"character":"👄","syllables":1,"types":["noun"]},"lipstick":{"character":"💄","syllables":2,"types":["noun"]},"lock":{"character":"🔒","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"lock_with_ink_pen":{"character":"🔏","syllables":4,"types":[]},"lollipop":{"character":"🍭","syllables":3,"types":["noun"]},"loop":{"character":"➿","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"loudspeaker":{"character":"📢","syllables":3,"types":["noun"]},"love_hotel":{"character":"🏩","syllables":3,"types":[]},"love_letter":{"character":"💌","syllables":3,"types":[]},"low_brightness":{"character":"🔅","syllables":3,"types":[]},"m":{"character":"ⓜ","syllables":1,"types":["noun","abbreviation"]},"mag":{"character":"🔍","syllables":1,"types":["noun"]},"mag_right":{"character":"🔎","syllables":2,"types":[]},"mahjong":{"character":"🀄️","syllables":2,"types":["noun"]},"mailbox":{"character":"📫","syllables":2,"types":["noun"]},"mailbox_closed":{"character":"📪","syllables":3,"types":[]},"mailbox_with_mail":{"character":"📬","syllables":4,"types":[]},"mailbox_with_no_mail":{"character":"📭","syllables":5,"types":[]},"man":{"character":"👨","syllables":1,"types":["noun","verb-transitive","interjection","idiom"]},"man_with_gua_pi_mao":{"character":"👲","syllables":4,"types":[]},"man_with_turban":{"character":"👳","syllables":4,"types":[]},"mans_shoe":{"character":"👞","syllables":2,"types":[]},"maple_leaf":{"character":"🍁","syllables":3,"types":[]},"mask":{"character":"😷","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"massage":{"character":"💆","syllables":2,"types":["noun","verb-transitive"]},"meat_on_bone":{"character":"🍖","syllables":3,"types":[]},"mega":{"character":"📣","syllables":2,"types":["adjective"]},"melon":{"character":"🍈","syllables":2,"types":["noun"]},"memo":{"character":"📝","syllables":2,"types":["noun"]},"mens":{"character":"🚹","syllables":1,"types":[]},"metro":{"character":"🚇","syllables":2,"types":["noun","adjective"]},"microphone":{"character":"🎤","syllables":3,"types":["noun"]},"microscope":{"character":"🔬","syllables":3,"types":["noun"]},"milky_way":{"character":"🌌","syllables":3,"types":[]},"minibus":{"character":"🚐","syllables":3,"types":["noun"]},"minidisc":{"character":"💽","syllables":3,"types":["noun"]},"mobile_phone_off":{"character":"📴","syllables":4,"types":[]},"money_with_wings":{"character":"💸","syllables":4,"types":[]},"moneybag":{"character":"💰","syllables":3,"types":["noun"]},"monkey":{"character":"🐒","syllables":2,"types":["noun","verb-intransitive","verb-transitive"]},"monkey_face":{"character":"🐵","syllables":3,"types":[]},"monorail":{"character":"🚝","syllables":3,"types":["noun"]},"moon":{"character":"🌙","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"mortar_board":{"character":"🎓","syllables":3,"types":[]},"mount_fuji":{"character":"🗻","syllables":3,"types":[]},"mountain_bicyclist":{"character":"🚵","syllables":5,"types":[]},"mountain_cableway":{"character":"🚠","syllables":2,"types":[]},"mountain_railway":{"character":"🚞","syllables":4,"types":[]},"mouse":{"character":"🐭","syllables":1,"types":["noun","verb-intransitive"]},"mouse2":{"character":"🐁","syllables":2,"types":[]},"movie_camera":{"character":"🎥","syllables":5,"types":[]},"moyai":{"character":"🗿","syllables":2,"types":[]},"muscle":{"character":"💪","syllables":2,"types":["noun","verb-intransitive","verb-transitive"]},"mushroom":{"character":"🍄","syllables":2,"types":["noun","verb-intransitive","adjective"]},"musical_keyboard":{"character":"🎹","syllables":5,"types":[]},"musical_note":{"character":"🎵","syllables":4,"types":[]},"musical_score":{"character":"🎼","syllables":4,"types":[]},"mute":{"character":"🔇","syllables":1,"types":["adjective","noun","verb-transitive"]},"nail_care":{"character":"💅","syllables":2,"types":[]},"name_badge":{"character":"📛","syllables":2,"types":[]},"necktie":{"character":"👔","syllables":2,"types":["noun"]},"negative_squared_cross_mark":{"character":"❎","syllables":6,"types":[]},"neutral_face":{"character":"😐","syllables":3,"types":[]},"new":{"character":"🆕","syllables":1,"types":["adjective","adverb"]},"new_moon":{"character":"🌑","syllables":2,"types":[]},"new_moon_with_face":{"character":"🌚","syllables":4,"types":[]},"newspaper":{"character":"📰","syllables":3,"types":["noun"]},"ng":{"character":"🆖","syllables":1,"types":["abbreviation"]},"nine":{"character":"9️⃣","syllables":1,"types":["noun","idiom"]},"no_bell":{"character":"🔕","syllables":2,"types":[]},"no_bicycles":{"character":"🚳","syllables":4,"types":[]},"no_entry":{"character":"⛔️","syllables":3,"types":[]},"no_entry_sign":{"character":"🚫","syllables":4,"types":[]},"no_good":{"character":"🙅","syllables":2,"types":[]},"no_mobile_phones":{"character":"📵","syllables":4,"types":[]},"no_mouth":{"character":"😶","syllables":2,"types":[]},"no_pedestrians":{"character":"🚷","syllables":5,"types":[]},"no_smoking":{"character":"🚭","syllables":3,"types":[]},"non-potable_water":{"character":"🚱","syllables":6,"types":[]},"nose":{"character":"👃","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"notebook":{"character":"📓","syllables":2,"types":["noun"]},"notebook_with_decorative_cover":{"character":"📔","syllables":8,"types":[]},"notes":{"character":"🎶","syllables":1,"types":["noun"]},"nut_and_bolt":{"character":"🔩","syllables":3,"types":[]},"o":{"character":"⭕️","syllables":1,"types":["noun"]},"o2":{"character":"🅾","syllables":2,"types":[]},"ocean":{"character":"🌊","syllables":2,"types":["noun"]},"octopus":{"character":"🐙","syllables":3,"types":["noun"]},"oden":{"character":"🍢","syllables":2,"types":[]},"office":{"character":"🏢","syllables":2,"types":["noun"]},"ok":{"character":"🆗","syllables":2,"types":["adjective"]},"ok_hand":{"character":"👌","syllables":3,"types":[]},"ok_woman":{"character":"🙆","syllables":4,"types":[]},"older_man":{"character":"👴","syllables":3,"types":[]},"older_woman":{"character":"👵","syllables":4,"types":[]},"on":{"character":"🔛","syllables":1,"types":["preposition","adverb","adjective","idiom"]},"oncoming_automobile":{"character":"🚘","syllables":7,"types":[]},"oncoming_bus":{"character":"🚍","syllables":4,"types":[]},"oncoming_police_car":{"character":"🚔","syllables":6,"types":[]},"oncoming_taxi":{"character":"🚖","syllables":5,"types":[]},"one":{"character":"1️⃣","syllables":1,"types":["adjective","noun","pronoun","idiom"]},"open_file_folder":{"character":"📂","syllables":5,"types":[]},"open_hands":{"character":"👐","syllables":3,"types":[]},"open_mouth":{"character":"😮","syllables":3,"types":[]},"ophiuchus":{"character":"⛎","syllables":4,"types":[]},"orange_book":{"character":"📙","syllables":3,"types":[]},"outbox_tray":{"character":"📤","syllables":1,"types":[]},"ox":{"character":"🐂","syllables":1,"types":["noun"]},"page_facing_up":{"character":"📄","syllables":4,"types":[]},"page_with_curl":{"character":"📃","syllables":3,"types":[]},"pager":{"character":"📟","syllables":2,"types":["noun"]},"palm_tree":{"character":"🌴","syllables":2,"types":[]},"panda_face":{"character":"🐼","syllables":3,"types":[]},"paperclip":{"character":"📎","syllables":3,"types":["noun"]},"parking":{"character":"🅿️","syllables":2,"types":["noun"]},"part_alternation_mark":{"character":"〽️","syllables":6,"types":[]},"partly_sunny":{"character":"⛅️","syllables":4,"types":[]},"passport_control":{"character":"🛂","syllables":4,"types":[]},"paw_prints":{"character":"🐾","syllables":2,"types":[]},"peach":{"character":"🍑","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"pear":{"character":"🍐","syllables":1,"types":["noun"]},"pencil":{"character":"📝","syllables":2,"types":["noun","verb-transitive","phrasal-verb"]},"pencil2":{"character":"✏️","syllables":3,"types":[]},"penguin":{"character":"🐧","syllables":2,"types":["noun"]},"pensive":{"character":"😔","syllables":2,"types":["adjective"]},"performing_arts":{"character":"🎭","syllables":4,"types":[]},"persevere":{"character":"😣","syllables":3,"types":["verb-intransitive"]},"person_frowning":{"character":"🙍","syllables":4,"types":[]},"person_with_blond_hair":{"character":"👱","syllables":5,"types":[]},"person_with_pouting_face":{"character":"🙎","syllables":6,"types":[]},"phone":{"character":"☎️","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"pig":{"character":"🐷","syllables":1,"types":["noun","verb-intransitive","phrasal-verb","idiom"]},"pig2":{"character":"🐖","syllables":2,"types":[]},"pig_nose":{"character":"🐽","syllables":2,"types":[]},"pill":{"character":"💊","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"pineapple":{"character":"🍍","syllables":3,"types":["noun"]},"pisces":{"character":"♓️","syllables":2,"types":[]},"pizza":{"character":"🍕","syllables":2,"types":["noun"]},"plus1":{"character":"👍","syllables":2,"types":[]},"point_down":{"character":"👇","syllables":2,"types":[]},"point_left":{"character":"👈","syllables":2,"types":[]},"point_right":{"character":"👉","syllables":2,"types":[]},"point_up":{"character":"☝️","syllables":2,"types":[]},"point_up_2":{"character":"👆","syllables":2,"types":[]},"police_car":{"character":"🚓","syllables":3,"types":[]},"poodle":{"character":"🐩","syllables":2,"types":["noun"]},"poop":{"character":"💩","syllables":1,"types":["noun","verb-transitive","phrasal-verb","verb-intransitive"]},"post_office":{"character":"🏣","syllables":3,"types":[]},"postal_horn":{"character":"📯","syllables":3,"types":[]},"postbox":{"character":"📮","syllables":2,"types":["noun"]},"potable_water":{"character":"🚰","syllables":5,"types":[]},"pouch":{"character":"👝","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"poultry_leg":{"character":"🍗","syllables":3,"types":[]},"pound":{"character":"💷","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"pouting_cat":{"character":"😾","syllables":3,"types":[]},"pray":{"character":"🙏","syllables":1,"types":["verb-intransitive","verb-transitive"]},"princess":{"character":"👸","syllables":2,"types":["noun","adjective"]},"punch":{"character":"👊","syllables":1,"types":["noun","verb-transitive","phrasal-verb","idiom"]},"purple_heart":{"character":"💜","syllables":3,"types":[]},"purse":{"character":"👛","syllables":1,"types":["noun","verb-transitive"]},"pushpin":{"character":"📌","syllables":2,"types":["noun"]},"put_litter_in_its_place":{"character":"🚮","syllables":6,"types":[]},"question":{"character":"❓","syllables":2,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"rabbit":{"character":"🐰","syllables":2,"types":["noun","verb-intransitive"]},"rabbit2":{"character":"🐇","syllables":3,"types":[]},"racehorse":{"character":"🐎","syllables":2,"types":["noun"]},"radio":{"character":"📻","syllables":3,"types":["noun","verb-transitive","verb-intransitive"]},"radio_button":{"character":"🔘","syllables":5,"types":[]},"rage":{"character":"😡","syllables":1,"types":["noun","verb-intransitive"]},"railway_car":{"character":"🚋","syllables":3,"types":[]},"rainbow":{"character":"🌈","syllables":2,"types":["noun"]},"raised_hand":{"character":"✋","syllables":2,"types":[]},"raised_hands":{"character":"🙌","syllables":2,"types":[]},"raising_hand":{"character":"🙋","syllables":3,"types":[]},"ram":{"character":"🐏","syllables":1,"types":["noun","verb-transitive"]},"ramen":{"character":"🍜","syllables":2,"types":["noun"]},"rat":{"character":"🐀","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"recycle":{"character":"♻️","syllables":3,"types":["verb-transitive"]},"red_car":{"character":"🚗","syllables":2,"types":[]},"red_circle":{"character":"🔴","syllables":3,"types":[]},"registered":{"character":"®","syllables":3,"types":["adjective"]},"relaxed":{"character":"☺️","syllables":2,"types":["adjective"]},"relieved":{"character":"😌","syllables":2,"types":["adjective","verb"]},"repeat":{"character":"🔁","syllables":2,"types":["verb-transitive","verb-intransitive","noun","adjective"]},"repeat_one":{"character":"🔂","syllables":3,"types":[]},"restroom":{"character":"🚻","syllables":2,"types":["noun"]},"revolving_hearts":{"character":"💞","syllables":4,"types":[]},"rewind":{"character":"⏪","syllables":2,"types":["verb-transitive","noun"]},"ribbon":{"character":"🎀","syllables":2,"types":["noun","verb-transitive"]},"rice":{"character":"🍚","syllables":1,"types":["noun","verb-transitive"]},"rice_ball":{"character":"🍙","syllables":2,"types":[]},"rice_cracker":{"character":"🍘","syllables":3,"types":[]},"rice_scene":{"character":"🎑","syllables":2,"types":[]},"ring":{"character":"💍","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"rocket":{"character":"🚀","syllables":2,"types":["noun","verb-intransitive","verb-transitive"]},"roller_coaster":{"character":"🎢","syllables":4,"types":[]},"rooster":{"character":"🐓","syllables":2,"types":["noun"]},"rose":{"character":"🌹","syllables":1,"types":["noun","adjective","idiom","verb"]},"rotating_light":{"character":"🚨","syllables":4,"types":[]},"round_pushpin":{"character":"📍","syllables":3,"types":[]},"rowboat":{"character":"🚣","syllables":2,"types":["noun"]},"ru":{"character":"🇷🇺","syllables":1,"types":[]},"rugby_football":{"character":"🏉","syllables":4,"types":[]},"runner":{"character":"🏃","syllables":2,"types":["noun"]},"running":{"character":"🏃","syllables":2,"types":["noun","adjective","adverb","idiom"]},"running_shirt_with_sash":{"character":"🎽","syllables":5,"types":[]},"sa":{"character":"🈂","syllables":1,"types":[]},"sagittarius":{"character":"♐️","syllables":5,"types":[]},"sailboat":{"character":"⛵️","syllables":2,"types":["noun"]},"sake":{"character":"🍶","syllables":1,"types":["noun"]},"sandal":{"character":"👡","syllables":2,"types":["noun"]},"santa":{"character":"🎅","syllables":2,"types":[]},"satellite":{"character":"📡","syllables":3,"types":["noun"]},"satisfied":{"character":"😆","syllables":3,"types":["adjective"]},"saxophone":{"character":"🎷","syllables":3,"types":["noun"]},"school":{"character":"🏫","syllables":1,"types":["noun","verb-transitive","adjective","verb-intransitive"]},"school_satchel":{"character":"🎒","syllables":1,"types":[]},"scissors":{"character":"✂️","syllables":2,"types":["noun","verb"]},"scorpius":{"character":"♏️","syllables":3,"types":[]},"scream":{"character":"😱","syllables":1,"types":["verb-intransitive","verb-transitive","noun"]},"scream_cat":{"character":"🙀","syllables":2,"types":[]},"scroll":{"character":"📜","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"seat":{"character":"💺","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"secret":{"character":"㊙️","syllables":2,"types":["adjective","noun"]},"see_no_evil":{"character":"🙈","syllables":4,"types":[]},"seedling":{"character":"🌱","syllables":2,"types":["noun"]},"seven":{"character":"7️⃣","syllables":2,"types":["noun"]},"shaved_ice":{"character":"🍧","syllables":2,"types":[]},"sheep":{"character":"🐑","syllables":1,"types":["noun"]},"shell":{"character":"🐚","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb"]},"ship":{"character":"🚢","syllables":1,"types":["noun","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"shirt":{"character":"👕","syllables":1,"types":["noun","idiom"]},"shit":{"character":"💩","syllables":1,"types":["verb-intransitive","verb-transitive","noun","interjection","phrasal-verb","idiom"]},"shoe":{"character":"👟","syllables":1,"types":["noun","verb-transitive","idiom"]},"shower":{"character":"🚿","syllables":2,"types":["noun","verb-transitive","verb-intransitive"]},"signal_strength":{"character":"📶","syllables":3,"types":[]},"six":{"character":"6️⃣","syllables":1,"types":["noun","idiom"]},"six_pointed_star":{"character":"🔯","syllables":4,"types":[]},"ski":{"character":"🎿","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"skull":{"character":"💀","syllables":1,"types":["noun"]},"sleeping":{"character":"😴","syllables":2,"types":["verb","adjective","noun"]},"sleepy":{"character":"😪","syllables":2,"types":["adjective"]},"slot_machine":{"character":"🎰","syllables":3,"types":[]},"small_blue_diamond":{"character":"🔹","syllables":4,"types":[]},"small_orange_diamond":{"character":"🔸","syllables":5,"types":[]},"small_red_triangle":{"character":"🔺","syllables":5,"types":[]},"small_red_triangle_down":{"character":"🔻","syllables":6,"types":[]},"smile":{"character":"😄","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"smile_cat":{"character":"😸","syllables":2,"types":[]},"smiley":{"character":"😃","syllables":2,"types":["noun","adjective"]},"smiley_cat":{"character":"😺","syllables":3,"types":[]},"smiling_imp":{"character":"😈","syllables":3,"types":[]},"smirk":{"character":"😏","syllables":1,"types":["verb-intransitive","noun"]},"smirk_cat":{"character":"😼","syllables":2,"types":[]},"smoking":{"character":"🚬","syllables":2,"types":["adjective"]},"snail":{"character":"🐌","syllables":1,"types":["noun"]},"snake":{"character":"🐍","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"snowboarder":{"character":"🏂","syllables":3,"types":["noun"]},"snowflake":{"character":"❄️","syllables":2,"types":["noun"]},"snowman":{"character":"⛄️","syllables":2,"types":["noun"]},"sob":{"character":"😭","syllables":1,"types":["verb-intransitive","verb-transitive","noun"]},"soccer":{"character":"⚽️","syllables":2,"types":["noun"]},"soon":{"character":"🔜","syllables":1,"types":["adverb","idiom"]},"sos":{"character":"🆘","syllables":3,"types":[]},"sound":{"character":"🔉","syllables":1,"types":["noun","verb-intransitive","verb-transitive","phrasal-verb","adjective","adverb"]},"space_invader":{"character":"👾","syllables":4,"types":[]},"spades":{"character":"♠️","syllables":1,"types":["noun","verb"]},"spaghetti":{"character":"🍝","syllables":3,"types":["noun"]},"sparkler":{"character":"🎇","syllables":2,"types":["noun"]},"sparkles":{"character":"✨","syllables":2,"types":["noun","verb"]},"sparkling_heart":{"character":"💖","syllables":3,"types":[]},"speak_no_evil":{"character":"🙊","syllables":4,"types":[]},"speaker":{"character":"🔈","syllables":2,"types":["noun"]},"speech_balloon":{"character":"💬","syllables":3,"types":[]},"speedboat":{"character":"🚤","syllables":2,"types":["noun"]},"star":{"character":"⭐️","syllables":1,"types":["noun","adjective","verb-transitive","verb-intransitive","idiom"]},"star2":{"character":"🌟","syllables":2,"types":[]},"stars":{"character":"🌠","syllables":1,"types":["noun","verb"]},"station":{"character":"🚉","syllables":2,"types":["noun","verb-transitive"]},"statue_of_liberty":{"character":"🗽","syllables":6,"types":[]},"steam_locomotive":{"character":"🚂","syllables":5,"types":[]},"stew":{"character":"🍲","syllables":1,"types":["verb-transitive","verb-intransitive","noun"]},"straight_ruler":{"character":"📏","syllables":3,"types":[]},"strawberry":{"character":"🍓","syllables":3,"types":["noun","adjective"]},"stuck_out_tongue":{"character":"😛","syllables":3,"types":[]},"stuck_out_tongue_closed_eyes":{"character":"😝","syllables":5,"types":[]},"stuck_out_tongue_winking_eye":{"character":"😜","syllables":6,"types":[]},"sun_with_face":{"character":"🌞","syllables":3,"types":[]},"sunflower":{"character":"🌻","syllables":3,"types":["noun"]},"sunglasses":{"character":"😎","syllables":3,"types":["noun"]},"sunny":{"character":"☀️","syllables":2,"types":["adjective"]},"sunrise":{"character":"🌅","syllables":2,"types":["noun"]},"sunrise_over_mountains":{"character":"🌄","syllables":6,"types":[]},"surfer":{"character":"🏄","syllables":2,"types":["noun"]},"sushi":{"character":"🍣","syllables":2,"types":["noun"]},"suspension_railway":{"character":"🚟","syllables":5,"types":[]},"sweat":{"character":"😓","syllables":1,"types":["verb-intransitive","verb-transitive","noun","phrasal-verb","idiom"]},"sweat_drops":{"character":"💦","syllables":2,"types":[]},"sweat_smile":{"character":"😅","syllables":2,"types":[]},"sweet_potato":{"character":"🍠","syllables":4,"types":[]},"swimmer":{"character":"🏊","syllables":2,"types":["noun"]},"symbols":{"character":"🔣","syllables":2,"types":["noun"]},"syringe":{"character":"💉","syllables":2,"types":["noun"]},"tada":{"character":"🎉","syllables":2,"types":["interjection"]},"tanabata_tree":{"character":"🎋","syllables":5,"types":[]},"tangerine":{"character":"🍊","syllables":3,"types":["noun"]},"taurus":{"character":"♉️","syllables":2,"types":["noun"]},"taxi":{"character":"🚕","syllables":2,"types":["noun","verb-intransitive","verb-transitive"]},"tea":{"character":"🍵","syllables":1,"types":["noun"]},"telephone":{"character":"☎️","syllables":3,"types":["noun","verb-transitive","verb-intransitive"]},"telephone_receiver":{"character":"📞","syllables":6,"types":[]},"telescope":{"character":"🔭","syllables":3,"types":["noun","verb-transitive","verb-intransitive"]},"tennis":{"character":"🎾","syllables":2,"types":["noun"]},"tent":{"character":"⛺️","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"thought_balloon":{"character":"💭","syllables":3,"types":[]},"three":{"character":"3️⃣","syllables":1,"types":["noun"]},"thumbsdown":{"character":"👎","syllables":2,"types":[]},"thumbsup":{"character":"👍","syllables":2,"types":[]},"ticket":{"character":"🎫","syllables":2,"types":["noun","verb-transitive"]},"tiger":{"character":"🐯","syllables":2,"types":["noun"]},"tiger2":{"character":"🐅","syllables":3,"types":[]},"tired_face":{"character":"😫","syllables":3,"types":[]},"tm":{"character":"™","syllables":2,"types":[]},"toilet":{"character":"🚽","syllables":2,"types":["noun"]},"tokyo_tower":{"character":"🗼","syllables":5,"types":[]},"tomato":{"character":"🍅","syllables":3,"types":["noun"]},"tongue":{"character":"👅","syllables":1,"types":["noun","verb-transitive","verb-intransitive","idiom"]},"top":{"character":"🔝","syllables":1,"types":["noun","adjective","verb-transitive","verb-intransitive","phrasal-verb","idiom"]},"tophat":{"character":"🎩","syllables":2,"types":["noun"]},"tractor":{"character":"🚜","syllables":2,"types":["noun"]},"traffic_light":{"character":"🚥","syllables":3,"types":[]},"train":{"character":"🚋","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"train2":{"character":"🚆","syllables":2,"types":[]},"tram":{"character":"🚊","syllables":1,"types":["noun","verb-transitive"]},"triangular_flag_on_post":{"character":"🚩","syllables":7,"types":[]},"triangular_ruler":{"character":"📐","syllables":6,"types":[]},"trident":{"character":"🔱","syllables":2,"types":["noun","adjective"]},"triumph":{"character":"😤","syllables":2,"types":["verb-intransitive","noun"]},"trolleybus":{"character":"🚎","syllables":3,"types":["noun"]},"trophy":{"character":"🏆","syllables":2,"types":["noun"]},"tropical_drink":{"character":"🍹","syllables":4,"types":[]},"tropical_fish":{"character":"🐠","syllables":4,"types":[]},"truck":{"character":"🚚","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"trumpet":{"character":"🎺","syllables":2,"types":["noun","verb-intransitive","verb-transitive"]},"tshirt":{"character":"👕","syllables":2,"types":[]},"tulip":{"character":"🌷","syllables":2,"types":["noun"]},"turtle":{"character":"🐢","syllables":2,"types":["noun","verb-intransitive"]},"tv":{"character":"📺","syllables":2,"types":["noun"]},"twisted_rightwards_arrows":{"character":"🔀","syllables":4,"types":[]},"two":{"character":"2️⃣","syllables":1,"types":["noun","idiom"]},"two_hearts":{"character":"💕","syllables":2,"types":[]},"two_men_holding_hands":{"character":"👬","syllables":5,"types":[]},"two_women_holding_hands":{"character":"👭","syllables":6,"types":[]},"u5272":{"character":"🈹","syllables":0,"types":[]},"u5408":{"character":"🈴","syllables":0,"types":[]},"u55b6":{"character":"🈺","syllables":0,"types":[]},"u6307":{"character":"🈯️","syllables":0,"types":[]},"u6708":{"character":"🈷","syllables":0,"types":[]},"u6709":{"character":"🈶","syllables":0,"types":[]},"u6e80":{"character":"🈵","syllables":0,"types":[]},"u7121":{"character":"🈚️","syllables":0,"types":[]},"u7533":{"character":"🈸","syllables":0,"types":[]},"u7981":{"character":"🈲","syllables":0,"types":[]},"u7a7a":{"character":"🈳","syllables":0,"types":[]},"uk":{"character":"🇬🇧","syllables":2,"types":[]},"umbrella":{"character":"☔️","syllables":3,"types":["noun"]},"unamused":{"character":"😒","syllables":3,"types":["adjective"]},"underage":{"character":"🔞","syllables":3,"types":["noun","adjective"]},"unlock":{"character":"🔓","syllables":2,"types":["verb-transitive","verb-intransitive"]},"up":{"character":"🆙","syllables":1,"types":["adverb","adjective","preposition","noun","verb-transitive","verb-intransitive","idiom"]},"us":{"character":"🇺🇸","syllables":1,"types":["pronoun"]},"v":{"character":"✌️","syllables":1,"types":["noun"]},"vertical_traffic_light":{"character":"🚦","syllables":6,"types":[]},"vhs":{"character":"📼","syllables":3,"types":[]},"vibration_mode":{"character":"📳","syllables":4,"types":[]},"video_camera":{"character":"📹","syllables":6,"types":[]},"video_game":{"character":"🎮","syllables":4,"types":[]},"violin":{"character":"🎻","syllables":3,"types":["noun"]},"virgo":{"character":"♍️","syllables":2,"types":[]},"volcano":{"character":"🌋","syllables":3,"types":["noun"]},"vs":{"character":"🆚","syllables":2,"types":["preposition"]},"walking":{"character":"🚶","syllables":2,"types":["adjective","noun"]},"waning_crescent_moon":{"character":"🌘","syllables":5,"types":[]},"waning_gibbous_moon":{"character":"🌖","syllables":5,"types":[]},"warning":{"character":"⚠️","syllables":2,"types":["noun","adjective"]},"watch":{"character":"⌚️","syllables":1,"types":["verb-intransitive","verb-transitive","noun","phrasal-verb","idiom"]},"water_buffalo":{"character":"🐃","syllables":5,"types":[]},"watermelon":{"character":"🍉","syllables":4,"types":["noun"]},"wave":{"character":"👋","syllables":1,"types":["verb-intransitive","verb-transitive","noun","phrasal-verb"]},"wavy_dash":{"character":"〰","syllables":3,"types":[]},"waxing_crescent_moon":{"character":"🌒","syllables":5,"types":[]},"waxing_gibbous_moon":{"character":"🌔","syllables":5,"types":[]},"wc":{"character":"🚾","syllables":2,"types":[]},"weary":{"character":"😩","syllables":2,"types":["adjective","verb-transitive"]},"wedding":{"character":"💒","syllables":2,"types":["noun"]},"whale":{"character":"🐳","syllables":1,"types":["noun","verb-intransitive","verb-transitive"]},"whale2":{"character":"🐋","syllables":2,"types":[]},"wheelchair":{"character":"♿️","syllables":2,"types":["noun"]},"white_check_mark":{"character":"✅","syllables":3,"types":[]},"white_circle":{"character":"⚪","syllables":3,"types":[]},"white_flower":{"character":"💮","syllables":3,"types":[]},"white_large_square":{"character":"◻️","syllables":3,"types":[]},"white_square_button":{"character":"🔳","syllables":4,"types":[]},"wind_chime":{"character":"🎐","syllables":2,"types":[]},"wine_glass":{"character":"🍷","syllables":2,"types":[]},"wink":{"character":"😉","syllables":1,"types":["verb-intransitive","verb-transitive","noun","phrasal-verb"]},"wolf":{"character":"🐺","syllables":1,"types":["noun","verb-transitive","idiom"]},"woman":{"character":"👩","syllables":2,"types":["noun","idiom"]},"womans_clothes":{"character":"👚","syllables":3,"types":[]},"womans_hat":{"character":"👒","syllables":3,"types":[]},"womens":{"character":"🚺","syllables":2,"types":[]},"worried":{"character":"😟","syllables":2,"types":["adjective","verb"]},"wrench":{"character":"🔧","syllables":1,"types":["noun","verb-transitive","verb-intransitive"]},"x":{"character":"❌","syllables":1,"types":["noun","verb-transitive",null]},"yellow_heart":{"character":"💛","syllables":3,"types":[]},"yen":{"character":"💴","syllables":1,"types":["noun","verb-intransitive"]},"yum":{"character":"😋","syllables":1,"types":["interjection"]},"zap":{"character":"⚡️","syllables":1,"types":["verb-transitive","verb-intransitive","noun","interjection"]},"zero":{"character":"0️⃣","syllables":2,"types":["noun","adjective","verb-transitive","phrasal-verb"]},"zzz":{"character":"💤","syllables":0,"types":["interjection","verb"]}};
 }));
 
-},{}],27:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8918,7 +8813,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 
 function getStack(err) {
   return err.stack.substring(err.name.length + 3 + err.message.length)
@@ -8943,7 +8838,7 @@ var explain = module.exports = function (err, message) {
 }
 
 
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var split = require('browser-split')
 var ClassList = require('class-list')
 require('html-element')
@@ -9094,7 +8989,7 @@ function isArray (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]'
 }
 
-},{"browser-split":15,"class-list":20,"html-element":14}],30:[function(require,module,exports){
+},{"browser-split":15,"class-list":20,"html-element":14}],28:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -9180,7 +9075,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],31:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -9191,7 +9086,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],32:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -9216,7 +9111,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 var v4 = '(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])(?:\\.(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])){3}';
@@ -9238,7 +9133,7 @@ ip.v6 = function (opts) {
 	return opts.exact ? new RegExp('^' + v6 + '$') : new RegExp(v6, 'g');
 };
 
-},{}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Determine if an object is Buffer
  *
@@ -9257,7 +9152,7 @@ module.exports = function (obj) {
     ))
 }
 
-},{}],35:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function(root) {
 
   function isValidDomain(v) {
@@ -9280,7 +9175,7 @@ module.exports = function (obj) {
   }
 
 })(this);
-},{}],36:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 var nodes = require('./nodes');
@@ -10005,7 +9900,7 @@ Compiler.prototype = {
   }
 };
 
-},{"./doctypes":37,"./filters":38,"./nodes":51,"./runtime":59,"./utils":60,"character-parser":19,"constantinople":24,"void-elements":136}],37:[function(require,module,exports){
+},{"./doctypes":35,"./filters":36,"./nodes":49,"./runtime":57,"./utils":58,"character-parser":19,"constantinople":22,"void-elements":134}],35:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -10018,7 +9913,7 @@ module.exports = {
   , 'basic': '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">'
   , 'mobile': '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">'
 };
-},{}],38:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 module.exports = filter;
@@ -10030,7 +9925,7 @@ function filter(name, str, options) {
   }
 }
 
-},{}],39:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -10452,7 +10347,7 @@ exports.__express = function(path, options, fn) {
 }
 
 }).call(this,require('_process'))
-},{"./compiler":36,"./doctypes":37,"./filters":38,"./lexer":41,"./nodes":51,"./parser":58,"./runtime":59,"./utils":60,"_process":79,"fs":14,"void-elements":136,"with":137}],40:[function(require,module,exports){
+},{"./compiler":34,"./doctypes":35,"./filters":36,"./lexer":39,"./nodes":49,"./parser":56,"./runtime":57,"./utils":58,"_process":77,"fs":14,"void-elements":134,"with":135}],38:[function(require,module,exports){
 'use strict';
 
 module.exports = [
@@ -10476,7 +10371,7 @@ module.exports = [
   , 'sub'
   , 'sup'
 ];
-},{}],41:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -11427,7 +11322,7 @@ Lexer.prototype = {
   }
 };
 
-},{"./utils":60,"character-parser":19}],42:[function(require,module,exports){
+},{"./utils":58,"character-parser":19}],40:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11512,7 +11407,7 @@ Attrs.prototype.addAttributes = function (src) {
   this.attributeBlocks.push(src);
 };
 
-},{"./node":55}],43:[function(require,module,exports){
+},{"./node":53}],41:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11538,7 +11433,7 @@ BlockComment.prototype.constructor = BlockComment;
 
 BlockComment.prototype.type = 'BlockComment';
 
-},{"./node":55}],44:[function(require,module,exports){
+},{"./node":53}],42:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11658,7 +11553,7 @@ Block.prototype.clone = function(){
   return clone;
 };
 
-},{"./node":55}],45:[function(require,module,exports){
+},{"./node":53}],43:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11693,7 +11588,7 @@ When.prototype.constructor = When;
 
 When.prototype.type = 'When';
 
-},{"./node":55}],46:[function(require,module,exports){
+},{"./node":53}],44:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11720,7 +11615,7 @@ Code.prototype = Object.create(Node.prototype);
 Code.prototype.constructor = Code;
 
 Code.prototype.type = 'Code'; // prevent the minifiers removing this
-},{"./node":55}],47:[function(require,module,exports){
+},{"./node":53}],45:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11745,7 +11640,7 @@ Comment.prototype.constructor = Comment;
 
 Comment.prototype.type = 'Comment';
 
-},{"./node":55}],48:[function(require,module,exports){
+},{"./node":53}],46:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11767,7 +11662,7 @@ Doctype.prototype.constructor = Doctype;
 
 Doctype.prototype.type = 'Doctype';
 
-},{"./node":55}],49:[function(require,module,exports){
+},{"./node":53}],47:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11795,7 +11690,7 @@ Each.prototype.constructor = Each;
 
 Each.prototype.type = 'Each';
 
-},{"./node":55}],50:[function(require,module,exports){
+},{"./node":53}],48:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11821,7 +11716,7 @@ Filter.prototype.constructor = Filter;
 
 Filter.prototype.type = 'Filter';
 
-},{"./node":55}],51:[function(require,module,exports){
+},{"./node":53}],49:[function(require,module,exports){
 'use strict';
 
 exports.Node = require('./node');
@@ -11839,7 +11734,7 @@ exports.Literal = require('./literal');
 exports.BlockComment = require('./block-comment');
 exports.Doctype = require('./doctype');
 
-},{"./block":44,"./block-comment":43,"./case":45,"./code":46,"./comment":47,"./doctype":48,"./each":49,"./filter":50,"./literal":52,"./mixin":54,"./mixin-block":53,"./node":55,"./tag":56,"./text":57}],52:[function(require,module,exports){
+},{"./block":42,"./block-comment":41,"./case":43,"./code":44,"./comment":45,"./doctype":46,"./each":47,"./filter":48,"./literal":50,"./mixin":52,"./mixin-block":51,"./node":53,"./tag":54,"./text":55}],50:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11861,7 +11756,7 @@ Literal.prototype.constructor = Literal;
 
 Literal.prototype.type = 'Literal';
 
-},{"./node":55}],53:[function(require,module,exports){
+},{"./node":53}],51:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -11881,7 +11776,7 @@ MixinBlock.prototype.constructor = MixinBlock;
 
 MixinBlock.prototype.type = 'MixinBlock';
 
-},{"./node":55}],54:[function(require,module,exports){
+},{"./node":53}],52:[function(require,module,exports){
 'use strict';
 
 var Attrs = require('./attrs');
@@ -11909,7 +11804,7 @@ Mixin.prototype.constructor = Mixin;
 
 Mixin.prototype.type = 'Mixin';
 
-},{"./attrs":42}],55:[function(require,module,exports){
+},{"./attrs":40}],53:[function(require,module,exports){
 'use strict';
 
 var Node = module.exports = function Node(){};
@@ -11929,7 +11824,7 @@ Node.prototype.clone = function(){
 
 Node.prototype.type = '';
 
-},{}],56:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var Attrs = require('./attrs');
@@ -12020,7 +11915,7 @@ Tag.prototype.canInline = function(){
   return false;
 };
 
-},{"../inline-tags":40,"./attrs":42,"./block":44}],57:[function(require,module,exports){
+},{"../inline-tags":38,"./attrs":40,"./block":42}],55:[function(require,module,exports){
 'use strict';
 
 var Node = require('./node');
@@ -12047,7 +11942,7 @@ Text.prototype.type = 'Text';
  */
 
 Text.prototype.isText = true;
-},{"./node":55}],58:[function(require,module,exports){
+},{"./node":53}],56:[function(require,module,exports){
 'use strict';
 
 var Lexer = require('./lexer');
@@ -12895,7 +12790,7 @@ Parser.prototype = {
   }
 };
 
-},{"./filters":38,"./lexer":41,"./nodes":51,"./utils":60,"character-parser":19,"constantinople":24,"fs":14,"path":77}],59:[function(require,module,exports){
+},{"./filters":36,"./lexer":39,"./nodes":49,"./utils":58,"character-parser":19,"constantinople":22,"fs":14,"path":75}],57:[function(require,module,exports){
 'use strict';
 
 /**
@@ -13143,7 +13038,7 @@ exports.DebugItem = function DebugItem(lineno, filename) {
   this.filename = filename;
 }
 
-},{"fs":14}],60:[function(require,module,exports){
+},{"fs":14}],58:[function(require,module,exports){
 'use strict';
 
 /**
@@ -13198,7 +13093,7 @@ exports.walkAST = function walkAST(ast, before, after) {
   after && after(ast);
 };
 
-},{}],61:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 //! moment.js
 //! version : 2.11.2
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -16805,7 +16700,7 @@ exports.walkAST = function walkAST(ast, before, after) {
     return _moment;
 
 }));
-},{}],62:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 var EventEmitter = require('events').EventEmitter
 var u = require('./util')
@@ -16858,7 +16753,7 @@ module.exports = function (path, remoteApi, _remoteCall) {
 }
 
 
-},{"./util":73,"events":27,"explain-error":28}],63:[function(require,module,exports){
+},{"./util":71,"events":25,"explain-error":26}],61:[function(require,module,exports){
 'use strict'
 var PSC          = require('packet-stream-codec')
 var u            = require('./util')
@@ -16944,7 +16839,7 @@ module.exports = function (remoteApi, localApi, codec) {
 }
 
 
-},{"./api":62,"./local-api":64,"./stream":72,"./util":73,"packet-stream-codec":75}],64:[function(require,module,exports){
+},{"./api":60,"./local-api":62,"./stream":70,"./util":71,"packet-stream-codec":73}],62:[function(require,module,exports){
 
 var Permissions  = require('./permissions')
 var u            = require('./util')
@@ -16987,7 +16882,7 @@ function createLocalCall(local, localApi, perms) {
 
 
 
-},{"./permissions":70,"./util":73}],65:[function(require,module,exports){
+},{"./permissions":68,"./util":71}],63:[function(require,module,exports){
 var sources  = require('./sources')
 var sinks    = require('./sinks')
 var throughs = require('./throughs')
@@ -17004,7 +16899,7 @@ for(var k in sinks)
   exports[k] = sinks[k]
 
 
-},{"./pull":66,"./sinks":67,"./sources":68,"./throughs":69}],66:[function(require,module,exports){
+},{"./pull":64,"./sinks":65,"./sources":66,"./throughs":67}],64:[function(require,module,exports){
 module.exports = function pull (a) {
   var length = arguments.length
   if (typeof a === 'function' && a.length === 1) {
@@ -17041,7 +16936,7 @@ module.exports = function pull (a) {
 
 
 
-},{}],67:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 'use strict'
 
 function id (item) { return item }
@@ -17164,7 +17059,7 @@ function (cb) {
 
 
 
-},{}],68:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 
 var keys = exports.keys =
 function (object) {
@@ -17245,7 +17140,7 @@ var error = exports.error = function (err) {
 }
 
 
-},{}],69:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 'use strict';
 
 function id (item) { return item }
@@ -17503,7 +17398,7 @@ var flatten = exports.flatten = function () {
 
 
 
-},{"./sinks":67,"./sources":68}],70:[function(require,module,exports){
+},{"./sinks":65,"./sources":66}],68:[function(require,module,exports){
 'use strict';
 var u = require('./util')
 
@@ -17615,7 +17510,7 @@ module.exports = function (opts) {
 
 
 
-},{"./util":73}],71:[function(require,module,exports){
+},{"./util":71}],69:[function(require,module,exports){
 'use strict'
 var pull = require('pull-stream')
 // wrap pull streams around packet-stream's weird streams.
@@ -17697,7 +17592,7 @@ module.exports.sink = function (s, done) {
 
 module.exports.duplex = module.exports
 
-},{"pull-stream":65}],72:[function(require,module,exports){
+},{"pull-stream":63}],70:[function(require,module,exports){
 'use strict';
 var PacketStream = require('packet-stream')
 var pull         = require('pull-stream')
@@ -17848,7 +17743,7 @@ module.exports = function initStream (localCall, codec, onClose) {
 
 
 
-},{"./pull-weird":71,"./util":73,"explain-error":28,"packet-stream":76,"pull-goodbye":88,"pull-stream":65}],73:[function(require,module,exports){
+},{"./pull-weird":69,"./util":71,"explain-error":26,"packet-stream":74,"pull-goodbye":86,"pull-stream":63}],71:[function(require,module,exports){
 'use strict';
 var pull = require('pull-stream')
 
@@ -17994,7 +17889,7 @@ exports.pipeToStream = function (type, _stream, stream) {
 }
 
 
-},{"pull-stream":65}],74:[function(require,module,exports){
+},{"pull-stream":63}],72:[function(require,module,exports){
 ;(function () {
 "use strict";
 
@@ -18234,7 +18129,7 @@ if('object' === typeof module) module.exports = exports
 else                           window.observable = exports
 })()
 
-},{}],75:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 (function (Buffer){
 
 var Through = require('pull-through')
@@ -18365,7 +18260,7 @@ exports.decode = decode
 
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":16,"pull-reader":91,"pull-through":110}],76:[function(require,module,exports){
+},{"buffer":16,"pull-reader":89,"pull-through":108}],74:[function(require,module,exports){
 function flat(err) {
   if(!err) return err
   if(err === true) return true
@@ -18655,7 +18550,7 @@ PacketStreamSubstream.prototype.destroy = function (err) {
   }
 }
 
-},{}],77:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -18883,7 +18778,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":79}],78:[function(require,module,exports){
+},{"_process":77}],76:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -18907,7 +18802,7 @@ function nextTick(fn) {
 }
 
 }).call(this,require('_process'))
-},{"_process":79}],79:[function(require,module,exports){
+},{"_process":77}],77:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -19000,7 +18895,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],80:[function(require,module,exports){
+},{}],78:[function(require,module,exports){
 var noop = function () {}
 
 function abortAll(ary, abort, cb) {
@@ -19045,7 +18940,7 @@ module.exports = function (streams) {
 
 
 
-},{}],81:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 exports.id = 
 function (item) {
   return item
@@ -19164,7 +19059,7 @@ function (createSink, cb) {
 }
 
 
-},{}],82:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 
 var Source = require('./source')
 var Sink = require('./sink')
@@ -19187,14 +19082,14 @@ module.exports = function () {
 
 }
 
-},{"./sink":84,"./source":85}],83:[function(require,module,exports){
+},{"./sink":82,"./source":83}],81:[function(require,module,exports){
 
 exports.source = require('./source')
 exports.through = require('./through')
 exports.sink = require('./sink')
 exports.duplex = require('./duplex')
 
-},{"./duplex":82,"./sink":84,"./source":85,"./through":86}],84:[function(require,module,exports){
+},{"./duplex":80,"./sink":82,"./source":83,"./through":84}],82:[function(require,module,exports){
 module.exports = function (stream) {
   var read, started = false, id = Math.random()
 
@@ -19215,7 +19110,7 @@ module.exports = function (stream) {
   return consume
 }
 
-},{}],85:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 
 module.exports = function () {
   var _read, _cb, abortCb, _end
@@ -19247,7 +19142,7 @@ module.exports = function () {
 }
 
 
-},{}],86:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 
 module.exports = function () {
   var read, reader, cb, abort, stream
@@ -19277,7 +19172,7 @@ module.exports = function () {
   return delayed
 }
 
-},{}],87:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 
 module.exports = function endable (goodbye) {
   var ended, waiting, sentEnd
@@ -19305,7 +19200,7 @@ module.exports = function endable (goodbye) {
 }
 
 
-},{}],88:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 
 var endable = require('./endable')
 var pull = require('pull-stream')
@@ -19330,7 +19225,7 @@ module.exports = function (stream, goodbye) {
 
 }
 
-},{"./endable":87,"pull-stream":105}],89:[function(require,module,exports){
+},{"./endable":85,"pull-stream":103}],87:[function(require,module,exports){
 
 
 module.exports = function (onPause) {
@@ -19367,7 +19262,7 @@ module.exports = function (onPause) {
 
 
 
-},{}],90:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 (function (Buffer){
 
 var BufferList = require('bl')
@@ -19436,7 +19331,7 @@ module.exports = function () {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"bl":8,"buffer":16}],91:[function(require,module,exports){
+},{"bl":8,"buffer":16}],89:[function(require,module,exports){
 'use strict'
 var State = require('./bl-state')
 
@@ -19558,7 +19453,7 @@ module.exports = function (timeout) {
 
 
 
-},{"./bl-state":90}],92:[function(require,module,exports){
+},{"./bl-state":88}],90:[function(require,module,exports){
 var pull = require('pull-stream')
 var Pause = require('pull-pause')
 
@@ -19642,17 +19537,17 @@ module.exports = function Scroller(scroller, render, top, sticky, cb) {
 
 
 
-},{"pull-pause":89,"pull-stream":93}],93:[function(require,module,exports){
+},{"pull-pause":87,"pull-stream":91}],91:[function(require,module,exports){
+arguments[4][63][0].apply(exports,arguments)
+},{"./pull":92,"./sinks":93,"./sources":94,"./throughs":95,"dup":63}],92:[function(require,module,exports){
+arguments[4][64][0].apply(exports,arguments)
+},{"dup":64}],93:[function(require,module,exports){
 arguments[4][65][0].apply(exports,arguments)
-},{"./pull":94,"./sinks":95,"./sources":96,"./throughs":97,"dup":65}],94:[function(require,module,exports){
+},{"dup":65}],94:[function(require,module,exports){
 arguments[4][66][0].apply(exports,arguments)
 },{"dup":66}],95:[function(require,module,exports){
 arguments[4][67][0].apply(exports,arguments)
-},{"dup":67}],96:[function(require,module,exports){
-arguments[4][68][0].apply(exports,arguments)
-},{"dup":68}],97:[function(require,module,exports){
-arguments[4][69][0].apply(exports,arguments)
-},{"./sinks":95,"./sources":96,"dup":69}],98:[function(require,module,exports){
+},{"./sinks":93,"./sources":94,"dup":67}],96:[function(require,module,exports){
 var pull = require('pull-stream')
 var splitter = require('pull-split')
 
@@ -19685,7 +19580,7 @@ module.exports = function (ps, _JSON, opts) {
   }
 }
 
-},{"pull-split":99,"pull-stream":100}],99:[function(require,module,exports){
+},{"pull-split":97,"pull-stream":98}],97:[function(require,module,exports){
 var through = require('pull-through')
 
 module.exports = function split (matcher, mapper, reverse) {
@@ -19724,7 +19619,7 @@ module.exports = function split (matcher, mapper, reverse) {
 }
 
 
-},{"pull-through":110}],100:[function(require,module,exports){
+},{"pull-through":108}],98:[function(require,module,exports){
 var sources  = require('./sources')
 var sinks    = require('./sinks')
 var throughs = require('./throughs')
@@ -19800,7 +19695,7 @@ exports.Sink    = exports.pipeableSink   = u.Sink
 
 
 
-},{"./maybe":101,"./sinks":102,"./sources":103,"./throughs":104,"pull-core":81}],101:[function(require,module,exports){
+},{"./maybe":99,"./sinks":100,"./sources":101,"./throughs":102,"pull-core":79}],99:[function(require,module,exports){
 var u = require('pull-core')
 var prop = u.prop
 var id   = u.id
@@ -19865,7 +19760,7 @@ module.exports = function (pull) {
   return exports
 }
 
-},{"pull-core":81}],102:[function(require,module,exports){
+},{"pull-core":79}],100:[function(require,module,exports){
 var drain = exports.drain = function (read, op, done) {
 
   ;(function next() {
@@ -19907,7 +19802,7 @@ var log = exports.log = function (read, done) {
 }
 
 
-},{}],103:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 
 var keys = exports.keys =
 function (object) {
@@ -20069,7 +19964,7 @@ function (start, createStream) {
 }
 
 
-},{}],104:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 (function (process){
 var u      = require('pull-core')
 var sources = require('./sources')
@@ -20400,13 +20295,13 @@ function (read, mapper) {
 
 
 }).call(this,require('_process'))
-},{"./sinks":102,"./sources":103,"_process":79,"pull-core":81}],105:[function(require,module,exports){
+},{"./sinks":100,"./sources":101,"_process":77,"pull-core":79}],103:[function(require,module,exports){
+arguments[4][98][0].apply(exports,arguments)
+},{"./maybe":104,"./sinks":105,"./sources":106,"./throughs":107,"dup":98,"pull-core":79}],104:[function(require,module,exports){
+arguments[4][99][0].apply(exports,arguments)
+},{"dup":99,"pull-core":79}],105:[function(require,module,exports){
 arguments[4][100][0].apply(exports,arguments)
-},{"./maybe":106,"./sinks":107,"./sources":108,"./throughs":109,"dup":100,"pull-core":81}],106:[function(require,module,exports){
-arguments[4][101][0].apply(exports,arguments)
-},{"dup":101,"pull-core":81}],107:[function(require,module,exports){
-arguments[4][102][0].apply(exports,arguments)
-},{"dup":102}],108:[function(require,module,exports){
+},{"dup":100}],106:[function(require,module,exports){
 
 var keys = exports.keys =
 function (object) {
@@ -20576,7 +20471,7 @@ function (start, createStream) {
 }
 
 
-},{}],109:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 (function (process){
 var u      = require('pull-core')
 var sources = require('./sources')
@@ -20928,7 +20823,7 @@ function (read, mapper) {
 
 
 }).call(this,require('_process'))
-},{"./sinks":107,"./sources":108,"_process":79,"pull-core":81}],110:[function(require,module,exports){
+},{"./sinks":105,"./sources":106,"_process":77,"pull-core":79}],108:[function(require,module,exports){
 var looper = require('looper')
 
 module.exports = function (writer, ender) {
@@ -20999,7 +20894,7 @@ module.exports = function (writer, ender) {
 }
 
 
-},{"looper":111}],111:[function(require,module,exports){
+},{"looper":109}],109:[function(require,module,exports){
 
 var looper = module.exports = function (fun) {
   (function next () {
@@ -21015,7 +20910,7 @@ var looper = module.exports = function (fun) {
   })()
 }
 
-},{}],112:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 'use strict';
 var ws = require('pull-ws')
 var WebSocket = require('ws')
@@ -21076,7 +20971,7 @@ exports.connect = function (addr, opts) {
 }
 
 
-},{"pull-ws":113,"url":131,"ws":140}],113:[function(require,module,exports){
+},{"pull-ws":111,"url":129,"ws":138}],111:[function(require,module,exports){
 exports = module.exports = duplex;
 
 exports.source = require('./source');
@@ -21089,7 +20984,7 @@ function duplex (ws, opts) {
   };
 };
 
-},{"./sink":115,"./source":116}],114:[function(require,module,exports){
+},{"./sink":113,"./source":114}],112:[function(require,module,exports){
 module.exports = function(socket, callback) {
   var remove = socket && (socket.removeEventListener || socket.removeListener);
 
@@ -21122,7 +21017,7 @@ module.exports = function(socket, callback) {
   socket.addEventListener('error', handleErr);
 };
 
-},{}],115:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 (function (process){
 var pull = require('pull-core');
 var ready = require('./ready');
@@ -21177,7 +21072,7 @@ module.exports = pull.Sink(function(read, socket, opts) {
 });
 
 }).call(this,require('_process'))
-},{"./ready":114,"_process":79,"pull-core":81}],116:[function(require,module,exports){
+},{"./ready":112,"_process":77,"pull-core":79}],114:[function(require,module,exports){
 var pull = require('pull-core');
 var ready = require('./ready');
 
@@ -21254,7 +21149,7 @@ module.exports = pull.Source(function(socket) {
   return read;
 });
 
-},{"./ready":114,"pull-core":81}],117:[function(require,module,exports){
+},{"./ready":112,"pull-core":79}],115:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.3.2 by @mathias */
 ;(function(root) {
@@ -21788,7 +21683,7 @@ module.exports = pull.Source(function(socket) {
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],118:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -21874,7 +21769,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],119:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -21961,13 +21856,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],120:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":118,"./encode":119}],121:[function(require,module,exports){
+},{"./decode":116,"./encode":117}],119:[function(require,module,exports){
 'use strict'
 var emojiNamedCharacters = require('emoji-named-characters')
 var marked = require('ssb-marked')
@@ -22115,7 +22010,7 @@ function renderEmoji (size) {
 }
 
 
-},{"emoji-named-characters":26,"ssb-marked":122,"ssb-msgs":124,"ssb-ref":125}],122:[function(require,module,exports){
+},{"emoji-named-characters":24,"ssb-marked":120,"ssb-msgs":122,"ssb-ref":123}],120:[function(require,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -23481,7 +23376,7 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],123:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 var ref = require('ssb-ref')
 var marked = require('ssb-marked')
 function noop(){}
@@ -23522,7 +23417,7 @@ module.exports = function (text) {
 }
 
 
-},{"ssb-marked":122,"ssb-ref":125}],124:[function(require,module,exports){
+},{"ssb-marked":120,"ssb-ref":123}],122:[function(require,module,exports){
 var ref = require('ssb-ref')
 
 function isObject (o) { return o && 'object' === typeof o }
@@ -23680,7 +23575,7 @@ exports.relationsTo = function (msgA, msgB) {
   })
   return rels
 }
-},{"ssb-ref":125}],125:[function(require,module,exports){
+},{"ssb-ref":123}],123:[function(require,module,exports){
 var isDomain = require('is-valid-domain')
 var rx = require('ip-regex')({exact: true})
 var isIP = rx.test.bind(rx)
@@ -23759,7 +23654,7 @@ exports.extract =
     var res = /([@%&][A-Za-z0-9\/+]{43}=\.[\w\d]+)/.exec(_data)
     return res && res[0]
   }
-},{"ip-regex":33,"is-valid-domain":35}],126:[function(require,module,exports){
+},{"ip-regex":31,"is-valid-domain":33}],124:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -23982,7 +23877,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":16}],127:[function(require,module,exports){
+},{"buffer":16}],125:[function(require,module,exports){
 
 function whitespace (s) {
   return /\S/.test(s)
@@ -24021,7 +23916,7 @@ exports.replace = function replace (value, text, i, bound) {
 }
 
 
-},{}],128:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 'use strict'
 var h = require('hyperscript')
 var wordBoundary = /\s/
@@ -24253,7 +24148,7 @@ function onblur(e) {
 
 
 
-},{"./bounds":127,"./suggester":129,"hyperscript":29,"textarea-caret-position":130}],129:[function(require,module,exports){
+},{"./bounds":125,"./suggester":127,"hyperscript":27,"textarea-caret-position":128}],127:[function(require,module,exports){
 
 function isObject (o) {
   return o && 'object' === typeof o
@@ -24319,7 +24214,7 @@ module.exports = function (choices) {
 
 
 
-},{}],130:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
 /* jshint browser: true */
 
 // The properties that we copy into a mirrored div.
@@ -24451,7 +24346,7 @@ CaretCoordinates.prototype.get = function(positionLeft, positionRight) {
 module.exports = CaretCoordinates;
 
 
-},{}],131:[function(require,module,exports){
+},{}],129:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -25185,7 +25080,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":132,"punycode":117,"querystring":120}],132:[function(require,module,exports){
+},{"./util":130,"punycode":115,"querystring":118}],130:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -25203,7 +25098,7 @@ module.exports = {
   }
 };
 
-},{}],133:[function(require,module,exports){
+},{}],131:[function(require,module,exports){
 (function (global){
 
 /**
@@ -25274,14 +25169,14 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],134:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],135:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -25871,7 +25766,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":134,"_process":79,"inherits":32}],136:[function(require,module,exports){
+},{"./support/isBuffer":132,"_process":77,"inherits":30}],134:[function(require,module,exports){
 /**
  * This file automatically generated from `pre-publish.js`.
  * Do not manually edit.
@@ -25896,7 +25791,7 @@ module.exports = {
   "wbr": true
 };
 
-},{}],137:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 'use strict';
 
 var detect = require('acorn-globals');
@@ -26023,7 +25918,7 @@ function unwrapReturns(src, result) {
   else return 'var ' + result + '=' + src.join('') + ';if (' + result + ') return ' + result + '.value'
 }
 
-},{"acorn":138,"acorn-globals":5,"acorn/dist/walk":139}],138:[function(require,module,exports){
+},{"acorn":136,"acorn-globals":5,"acorn/dist/walk":137}],136:[function(require,module,exports){
 (function (global){
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.acorn = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
@@ -30040,7 +29935,7 @@ exports.nonASCIIwhitespace = nonASCIIwhitespace;
 },{}]},{},[1])(1)
 });
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],139:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 (function (global){
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}(g.acorn || (g.acorn = {})).walk = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 "use strict";
@@ -30385,7 +30280,7 @@ base.ComprehensionExpression = function (node, st, c) {
 },{}]},{},[1])(1)
 });
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],140:[function(require,module,exports){
+},{}],138:[function(require,module,exports){
 
 /**
  * Module dependencies.
@@ -30430,7 +30325,7 @@ function ws(uri, protocols, opts) {
 
 if (WebSocket) ws.prototype = WebSocket.prototype;
 
-},{}],141:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 //simplest reconnector.
 //if a connection attempt ended in under 3
 //seconds, consider that an error, and double time until next retry.
@@ -30454,7 +30349,7 @@ module.exports = function reconnect(connect, onConnect) {
 
 
 
-},{}],142:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 
 var h = require('hyperscript')
 function px (n) { return n+'px' }
@@ -30499,7 +30394,7 @@ module.exports = function () {
 
 
 
-},{"hyperscript":29}],143:[function(require,module,exports){
+},{"hyperscript":27}],141:[function(require,module,exports){
 
 
 function isDef (s) {

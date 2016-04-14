@@ -43,10 +43,12 @@ function Jade (data, template){
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
-// window.onhashchange(function(){
-//   console.log("hash change")
-// })
-
+if ("onhashchange" in window) {
+  window.onhashchange = function(){
+    console.log("hash change");
+    console.log(location.hash);
+  }
+}
 
 
 document.body.appendChild(h('style', '.selected { color: red };'))
@@ -385,6 +387,7 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
 
 
 
