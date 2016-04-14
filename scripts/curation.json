@@ -1,0 +1,10 @@
+{
+  "type": "curation",
+  "curate": "%0fwbXJ6Z69vRPIbG8jgJ2XPeMQtA46t1SfnGX3hN/iM=.sha256",
+  "credits": "@sCkl4EUCHxtKubWwCB3hI7/VWd5yMWUdeIH9af3uSww=.ed25519",
+  "title": "decentralized delegative decision making",
+  "oneLiner": "entrust others with your consent, to scale decision making in large or busy groups",
+  "summary": "involving everyone in every decision is great democracy, but it's also great for burn out. Loomio allows everyone to have a say, but if someone doesn't use their say, then that is interpreted as an abstention. i.e. _silence implies consent_. In the new model, you can entrust your say to another explicitly. Then, their say counts for you too. This entrusting someone with your consent is dynamic and contextual. You can reentrust your consent to another, or entrust to only a subset of decisions (via a tag).",
+  "rating": 0.2,
+  "tags": ["#collaboration", "#sketch", "#decision-making"]
+}
