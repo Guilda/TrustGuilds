@@ -19,6 +19,7 @@
     "pull-defer": "^0.2.1",
     "pull-identify-filetype": "^1.0.2",
     "pull-scroll": "0.0.0",
+    "pull-stringify": "^1.2.2",
     "scuttlebot": "^7.6.4",
     "ssb-http": "0.0.1",
     "ssb-links": "^1.0.1",
