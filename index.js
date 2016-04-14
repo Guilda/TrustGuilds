@@ -190,6 +190,7 @@ function renderWithTemplate(data, template_path){
 
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
+  // console.log(data);
 
   return renderWithTemplate(data, "view/post.jade")
 
