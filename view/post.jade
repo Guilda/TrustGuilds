@@ -1,12 +1,11 @@
-
 .post
   .title
     a(href="#")
-      span #{ self.value.author }
-    if self.value.content
-      label #{ self.value.content.type }
-    #{ self.value.timestamp }
+      span #{ value.author }
+    if value.content
+      label #{ value.content.type }
+    #{ value.timestamp }
     a(href="#") Time
     div(style: "width: 450px; overflow: hidden;")
       pre
-        #{ self.value }
+        #{ value }

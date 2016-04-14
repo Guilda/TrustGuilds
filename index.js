@@ -182,7 +182,7 @@ var streams = {
 
 // With this data, render the given template at path
 function renderWithTemplate(data, template_path){
-  var rendered_page = jade.renderFile(template_path, { self: data });
+  var rendered_page = jade.renderFile(template_path, data);
   var new_page_element = document.createElement('div')
 
   new_page_element.innerHTML = rendered_page;
@@ -363,4 +363,3 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
-
