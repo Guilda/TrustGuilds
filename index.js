@@ -276,18 +276,26 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var title = h('label', "title", h('input', {type: 'text'}))
-        var summary = h('label', "summary", h('textarea', {rows: 20, cols: 80}))
-        var one_liner = h('label', "one liner", h('textarea', {rows: 2, cols: 80}))
-        var tags = h('label', "tags", h('input', {type: 'text'}))
+        var title = h('input', {type: 'text'})
+        var title_bundle = h('label', "title", title)
+
+        var summary = h('textarea', {rows: 20, cols: 80})
+        var summary_bundle = h('label', "summary", summary)
+
+        var one_liner = h('textarea', {rows: 2, cols: 80})
+        var one_liner_bundle = h('label', "one liner", one_liner)
+
+        var tags = h('input', {type: 'text'})
+        var tags_bundle = h('label', "tags", tags)
+
         var prev = h('span')
 
         var form = h('form')
 
-        form.appendChild(title)
-        form.appendChild(summary)
-        form.appendChild(one_liner)
-        form.appendChild(tags)
+        form.appendChild(title_bundle)
+        form.appendChild(one_liner_bundle)
+        form.appendChild(summary_bundle)
+        form.appendChild(tags_bundle)
 
         var tog
         lightbox.show(h('span',
