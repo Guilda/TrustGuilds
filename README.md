@@ -3,8 +3,8 @@
 Circles of trust, content and reward
 
 ```
-git clone https://github.com/Guilda/patchdeck.git
-cd patchdeck
+git clone https://github.com/Guilda/TrustGuilds.git
+cd TrustGuilds
 npm install
 npm start
 ```
