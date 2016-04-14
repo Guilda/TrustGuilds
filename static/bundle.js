@@ -114,8 +114,11 @@ function render_person(person)
   console.log("About to pull omg")
 
   pull( streams.user(person), pull.through( function(chunk){
+    console.log("something in stream")
     console.log(chunk)
-  }, function(e){ console.log("STREAM CLOSED")}))
+  }, function(e){
+    console.log("STREAM CLOSED")
+  }))
 
 
   console.log("DONE")
@@ -376,7 +379,7 @@ function createPanel (el, stream) {
               oneLiner: one_liner.value,
               summary: summary.value,
               mentions: mentions(summary.value),
-              tags: tags.value.split(),
+              tags: tags.value.split(" "),
               rating: parseFloat(rating.value)
             }
 
@@ -462,13 +465,6 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
-
-
-
-
-
-
-
 
 }).call(this,require("buffer").Buffer)
 },{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":141,"./status":142,"./validation":143,"buffer":18,"column-deck/stack":23,"hyperscript":31,"jade":41,"moment":63,"muxrpc":65,"observable":76,"path":79,"pull-cat":82,"pull-defer":85,"pull-scroll":94,"pull-serializer":100,"pull-stream":107,"pull-ws-server/client":114,"ssb-markdown":123,"ssb-mentions":126,"suggest-box":130}],3:[function(require,module,exports){

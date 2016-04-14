@@ -79,8 +79,11 @@ function render_person(person)
   console.log("About to pull omg")
 
   pull( streams.user(person), pull.through( function(chunk){
+    console.log("something in stream")
     console.log(chunk)
-  }, function(e){ console.log("STREAM CLOSED")}))
+  }, function(e){
+    console.log("STREAM CLOSED")
+  }))
 
 
   console.log("DONE")
@@ -341,7 +344,7 @@ function createPanel (el, stream) {
               oneLiner: one_liner.value,
               summary: summary.value,
               mentions: mentions(summary.value),
-              tags: tags.value.split(),
+              tags: tags.value.split(" "),
               rating: parseFloat(rating.value)
             }
 
@@ -427,10 +430,3 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
-
-
-
-
-
-
-
