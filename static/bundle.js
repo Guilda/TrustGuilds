@@ -5,6 +5,24 @@ var pull = require('pull-stream')
 //all curations
 module.exports = function (sbot) {
   return {
+    tags: function (opts) {
+      return pull(
+        sbot.query.read({query: [
+          {$filter: {value: {content: {
+            type: "curation",
+            curate: {$prefix: ''}
+          }}}},
+          {$map: ['value', 'content', 'tags']}
+        ]}),
+        pull.flatten(),
+        pull.map(function (e) {
+          return e.split(/[ ,]+/)
+        }),
+        pull.flatten(),
+        pull.filter(v.isTag)
+      )
+    },
+
     //all curations.
     curations: function (opts) {
       var tags = []
@@ -27,6 +45,7 @@ module.exports = function (sbot) {
     }
   }
 }
+
 
 
 
@@ -483,7 +502,7 @@ function px(p) { return p+'px' }
 module.exports = function () {
   var lightbox = h('div', {style: {
     background: 'white', border: '1px solid black',
-    position: 'fixed', top: px(20), left: px(20),
+    position: 'absolute', top: px(20), left: px(20),
     display: 'none',
     padding: px(10)
   }})
@@ -505,7 +524,6 @@ module.exports = function () {
 
   return lightbox
 }
-
 
 },{"hyperscript":31}],4:[function(require,module,exports){
 module.exports={

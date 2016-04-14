@@ -13,7 +13,7 @@ function px(p) { return p+'px' }
 module.exports = function () {
   var lightbox = h('div', {style: {
     background: 'white', border: '1px solid black',
-    position: 'fixed', top: px(20), left: px(20),
+    position: 'absolute', top: px(20), left: px(20),
     display: 'none',
     padding: px(10)
   }})
@@ -35,4 +35,3 @@ module.exports = function () {
 
   return lightbox
 }
-
