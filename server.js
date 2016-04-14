@@ -5,6 +5,7 @@ var path         = require('path')
 var manifestFile = path.join(__dirname, 'manifest.json')
 var pull = require('pull-stream')
 var Serializer = require('pull-serializer')
+var Ecstatic = require('ecstatic')
 
 var keys = ssbKeys.loadOrCreateSync(path.join(config.path, 'secret'))
 
@@ -31,9 +32,8 @@ fs.writeFileSync(manifestFile, JSON.stringify(sbot.getManifest(), null, 2))
 var http = require('http')
 var WS = require('pull-ws-server')
 var MuxRpc = require('muxrpc')
-var server = http.createServer(function (req, res) {
-    fs.createReadStream(path.join(__dirname, 'static', 'index.html')).pipe(res)
-  }).listen(8000)
+var server =
+  http.createServer(Ecstatic(path.join(__dirname, 'static'))).listen(8000)
 
 WS.createServer({server: server}, function (ws) {
   console.log('RPC connection')
@@ -42,4 +42,5 @@ WS.createServer({server: server}, function (ws) {
 
   pull(ws, pull.through(console.log), rpc.createStream(), pull.through(console.log), ws)
 })
+
 
