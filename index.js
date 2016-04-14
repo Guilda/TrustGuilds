@@ -9,6 +9,8 @@ var markdown = require('ssb-markdown')
 var Cat = require('pull-cat')
 var mentions = require('ssb-mentions')
 
+var API = require('./api')
+
 var suggest = require('suggest-box')
 
 var Columns = require('column-deck')
@@ -144,7 +146,7 @@ function toggle(off, on, change) {
 
 var streams = {
   all: function () {
-    return sbot.createLogStream({reverse: true})
+    return API(sbot).curations()
   },
   user: function (id) {
     return sbot.createUserStream({ id: id, reverse: true })
@@ -361,3 +363,4 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
+
