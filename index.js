@@ -77,6 +77,19 @@ function render_person(person)
   console.log("render_person " + person)
 
   var content = document.body.querySelector('#content')
+  content.innerHTML = ""
+
+  console.log("About to pull omg")
+
+  pull( streams.user(person), pull.through( function(chunk){
+    console.log(chunk)
+  }, function(e){ console.log("STREAM CLOSED")}))
+
+
+  console.log("DONE")
+
+
+  // console.log(streams.user(person));
   createPanel(content, streams.user(person))
 }
 

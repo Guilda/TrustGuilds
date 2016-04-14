@@ -133,6 +133,13 @@ function render_person(person)
   console.log("render_person " + person)
 
   var content = document.body.querySelector('#content')
+  content.innerHTML = ""
+
+  pull( streams.user(person), pull.through( function(chunk){
+    console.log(chunk)
+  }))
+
+  // console.log(streams.user(person));
   createPanel(content, streams.user(person))
 }
 
