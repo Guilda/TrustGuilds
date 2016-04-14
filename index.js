@@ -45,6 +45,9 @@ document.body.appendChild(h('style', '.selected { color: red };'))
 document.body.appendChild(h('style',
   fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8')
 ))
+document.body.appendChild(h('style',
+  fs.readFileSync(path.join(__dirname, 'bootstrap.min.css'), 'utf8')
+))
 
 var lightbox = require('./lightbox')()
 document.body.appendChild(lightbox)
@@ -273,35 +276,75 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var ta = h('textarea', {rows: 20, cols: 80})
+        var url = h('input', {type: 'text', className: "form-control"})
+        var url_bundle = h('div', {className: 'form-group'}, h('label', "url", title))
+
+        var title = h('input', {type: 'text', className: "form-control"})
+        var title_bundle = h('label', "title", title)
+
+        var summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})
+        var summary_bundle = h('label', "summary", summary)
+
+        var one_liner = h('textarea', {rows: 2, cols: 80, className: "form-control"})
+        var one_liner_bundle = h('label', "one liner", one_liner)
+
+        var tags = h('input', {type: 'text', className: "form-control"})
+        var tags_bundle = h('label', "tags", tags)
+
         var prev = h('span')
+
+        var form = h('form', h('div', {className: 'form-group'}))
+
+        form.appendChild(url_bundle)
+        form.appendChild(title_bundle)
+        form.appendChild(one_liner_bundle)
+        form.appendChild(summary_bundle)
+        form.appendChild(tags_bundle)
 
         var tog
         lightbox.show(h('span',
-          tog = h('div', ta),
+          tog = h('div', form),
           h('br'),
           click('cancel', lightbox.close),
           ' ',
           toggle('preview', 'edit', function (state) {
             tog.innerHTML = ''
-            if(!state) tog.appendChild(ta)
+            if(!state){
+              tog.appendChild(form)
+            }
             else {
-              prev.innerHTML = markdown.block(ta.value)
+              prev.innerHTML = markdown.block(summary.value)
               tog.appendChild(prev)
             }
             lightbox.center()
           }),
 
           click('publish', function () {
-            var content = {type: 'post', text: ta.value, mentions: mentions(ta.value)}
-            sbot.publish(content, function (err, msg) {
-              alert('published: '+ msg.key || JSON.stringify(msg))
-              lightbox.close()
-            })
+
+            var content = {
+              type: 'curation',
+              summary: summary.value,
+              mentions: mentions(summary.value),
+              oneLiner: one_liner.value,
+              tags: tags.value.split()
+            }
+
+            // If valid, publish this curation
+            try{
+              curation(content)
+
+              sbot.publish(content, function (err, msg) {
+                alert('published: '+ msg.key || JSON.stringify(msg))
+                lightbox.close()
+              })
+            }
+            catch(error){
+              alert(error);
+            }
           })
         ))
 
-        suggest(ta, function (word, cb) {
+        suggest(summary, function (word, cb) {
           if(!/^[@%&!]/.test(word[0])) return cb()
           if(word.length < 2) return cb()
 
@@ -378,7 +421,3 @@ ssbc(function (err, _sbot) {
   createPanel(content, streams.all())
 //  createPanel(streams.all())
 })
-
-
-
-
