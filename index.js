@@ -200,8 +200,8 @@ var streams = {
 
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
-  // console.log(data);
-
+  console.log(data);
+  
   return Jade(data, view.post)
 
   // return h('span', h('div.post',
@@ -403,7 +403,6 @@ function createPanel (el, stream) {
 
 require('./reconnect')(function (cb) {
   var ws = WS.connect('ws://localhost:8000/')
-
   sbot = window.CLIENT = 
     MuxRpc(require('./manifest.json'), null, Serializer)()
 
@@ -413,9 +412,12 @@ require('./reconnect')(function (cb) {
   var el = Jade(null, view.layout)
   document.body.appendChild(el)
   var content = el.querySelector('#content')
-  console.log('OKIKAY')
   createPanel(content, streams.all())
 
 })
+
+
+
+
 
 
