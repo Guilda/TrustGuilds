@@ -22,7 +22,7 @@ var Stack = require('column-deck/stack')
 var moment = require('moment')
 var jade = require('jade')
 
-// var validation = require('validation')
+var validation = require('./validation')
 
 function px (n) { return n+'px' }
 
@@ -279,16 +279,20 @@ function createPanel (el, stream) {
       //for the branch link.
       click('post', function () {
         var url = h('input', {type: 'text', className: "form-control"})
-        var url_bundle = h('div', {className: 'form-group'}, h('label', "url", title))
+        var url_bundle = h('label', "url", url)
 
         var title = h('input', {type: 'text', className: "form-control"})
         var title_bundle = h('label', "title", title)
 
-        var summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})
-        var summary_bundle = h('label', "summary", summary)
+        var rating = h('input', {type: 'text', className: "form-control"})
+        var rating_bundle = h('label', "rating", rating)
+
 
         var one_liner = h('textarea', {rows: 2, cols: 80, className: "form-control"})
         var one_liner_bundle = h('label', "one liner", one_liner)
+
+        var summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})
+        var summary_bundle = h('label', "summary", summary)
 
         var tags = h('input', {type: 'text', className: "form-control"})
         var tags_bundle = h('label', "tags", tags)
@@ -300,6 +304,7 @@ function createPanel (el, stream) {
         form.appendChild(url_bundle)
         form.appendChild(title_bundle)
         form.appendChild(one_liner_bundle)
+        form.appendChild(rating_bundle)
         form.appendChild(summary_bundle)
         form.appendChild(tags_bundle)
 
@@ -325,23 +330,27 @@ function createPanel (el, stream) {
 
             var content = {
               type: 'curation',
+              curate: '',
+              url: url.value,
+              title: title.value,
+              oneLiner: one_liner.value,
               summary: summary.value,
               mentions: mentions(summary.value),
-              oneLiner: one_liner.value,
-              tags: tags.value.split()
+              tags: tags.value.split(),
+              rating: parseFloat(rating.value)
             }
 
             // If valid, publish this curation
             try{
-              // validation.curation(content)
+              validation.curation(content)
 
               sbot.publish(content, function (err, msg) {
                 alert('published: '+ msg.key || JSON.stringify(msg))
                 lightbox.close()
               })
             }
-            catch(error){
-              alert(error);
+            catch(e){
+              alert(e);
             }
           }, 'btn btn-success')
         ))
