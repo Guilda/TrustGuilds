@@ -22,7 +22,7 @@ var Stack = require('column-deck/stack')
 var moment = require('moment')
 var jade = require('jade')
 
-var validation = require('validation')
+// var validation = require('validation')
 
 function px (n) { return n+'px' }
 
@@ -333,7 +333,7 @@ function createPanel (el, stream) {
 
             // If valid, publish this curation
             try{
-              validation.curation(content)
+              // validation.curation(content)
 
               sbot.publish(content, function (err, msg) {
                 alert('published: '+ msg.key || JSON.stringify(msg))
