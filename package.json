@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "column-deck": "0.0.0",
+    "eccjs": "^0.3.1",
     "electro": "0.0.5",
     "electron-prebuilt": "^0.36.10",
     "jade": "^1.11.0",

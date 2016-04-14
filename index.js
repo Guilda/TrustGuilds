@@ -42,7 +42,7 @@ function Jade (data, template){
   return new_page_element;
 }
 
-//var dock = Columns({width: 600, margin: 20})
+var dock = Columns({width: 600, margin: 20})
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
