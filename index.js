@@ -276,22 +276,26 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var title = h('input', {type: 'text', class: "form-control"})
+        var url = h('input', {type: 'text', className: "form-control"})
+        var url_bundle = h('div', {className: 'form-group'}, h('label', "url", title))
+
+        var title = h('input', {type: 'text', className: "form-control"})
         var title_bundle = h('label', "title", title)
 
-        var summary = h('textarea', {rows: 20, cols: 80, class: "form-control"})
+        var summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})
         var summary_bundle = h('label', "summary", summary)
 
-        var one_liner = h('textarea', {rows: 2, cols: 80, class: "form-control"})
+        var one_liner = h('textarea', {rows: 2, cols: 80, className: "form-control"})
         var one_liner_bundle = h('label', "one liner", one_liner)
 
-        var tags = h('input', {type: 'text', class: "form-control"})
+        var tags = h('input', {type: 'text', className: "form-control"})
         var tags_bundle = h('label', "tags", tags)
 
         var prev = h('span')
 
-        var form = h('form', h('div', {class: 'form-group'}))
+        var form = h('form', h('div', {className: 'form-group'}))
 
+        form.appendChild(url_bundle)
         form.appendChild(title_bundle)
         form.appendChild(one_liner_bundle)
         form.appendChild(summary_bundle)
