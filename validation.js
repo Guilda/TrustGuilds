@@ -29,7 +29,7 @@ function isNumber (n) {
 
 exports.curation = function (content) {
 
-  valid(content.type === 'curation', 'content.type must be: "curation")
+  valid(content.type === 'curation', 'content.type must be: "curation"')
   valid(isString(content.curate), 'content.curate link missing')
   valid(isLength(content.title, 60) && 'content.title must be string < 60 chars')
   valid(isLength(content.oneLiner, 100) && 'content.oneLiner must be string < 100 chars')
@@ -43,4 +43,5 @@ exports.curation = function (content) {
   return true
 }
 
-
+exports.isString = isString
+exports.isTag = isTag
