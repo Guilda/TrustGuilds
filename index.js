@@ -266,6 +266,7 @@ function createPanel (stream) {
       //for the branch link.
       click('post', function () {
         var ta = h('textarea', {rows: 20, cols: 80})
+        var one_liner = h('textarea', {rows: 2, cols: 80})
         var prev = h('span')
 
         var tog
@@ -285,7 +286,7 @@ function createPanel (stream) {
           }),
 
           click('publish', function () {
-            var content = {type: 'post', text: ta.value, mentions: mentions(ta.value)}
+            var content = {type: 'curation', text: ta.value, mentions: mentions(ta.value)}
             sbot.publish(content, function (err, msg) {
               alert('published: '+ msg.key || JSON.stringify(msg))
               lightbox.close()
