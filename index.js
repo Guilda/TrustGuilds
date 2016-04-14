@@ -20,7 +20,7 @@ var API = require('./api')
 
 var suggest = require('suggest-box')
 
-//var Columns = require('column-deck')
+var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
@@ -46,10 +46,12 @@ var dock = Columns({width: 600, margin: 20})
 
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
-// window.onhashchange(function(){
-//   console.log("hash change")
-// })
-
+if ("onhashchange" in window) {
+  window.onhashchange = function(){
+    console.log("hash change");
+    console.log(location.hash);
+  }
+}
 
 
 document.body.appendChild(h('style', '.selected { color: red };'))
