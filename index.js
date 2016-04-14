@@ -1,10 +1,14 @@
+var MuxRpc = require('muxrpc')
+var Serializer = require('pull-serializer')
+var WS = require('pull-ws-server/client')
+
 var start = Date.now()
 var defer = require('pull-defer')
 var observ = require('observable')
 var pull = require('pull-stream')
 var Scroll = require('pull-scroll')
 var h = require('hyperscript')
-var ssbc = require('ssb-client')
+//var ssbc = require('ssb-client')
 var markdown = require('ssb-markdown')
 var Cat = require('pull-cat')
 var mentions = require('ssb-mentions')
@@ -16,7 +20,7 @@ var API = require('./api')
 
 var suggest = require('suggest-box')
 
-var Columns = require('column-deck')
+//var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
@@ -26,30 +30,24 @@ var validation = require('./validation')
 
 function px (n) { return n+'px' }
 
+var view = {
+  layout: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'layout.jade'))),
+  post: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'post.jade')))
+}
 
 // With this data, render the given template at path
-function Jade (data, template_path){
-  var rendered_page = jade.renderFile(template_path, data);
+function Jade (data, template){
   var new_page_element = document.createElement('span')
-
-  new_page_element.innerHTML = rendered_page;
-
+  new_page_element.innerHTML = template(data);
   return new_page_element;
 }
 
-var dock = Columns({width: 600, margin: 20})
+//var dock = Columns({width: 600, margin: 20})
 
 document.body.style.margin = px(0)
 document.body.style.padding = px(0)
 
 document.body.appendChild(h('style', '.selected { color: red };'))
-
-document.body.appendChild(h('style',
-  fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8')
-))
-document.body.appendChild(h('style',
-  fs.readFileSync(path.join(__dirname, 'bootstrap.min.css'), 'utf8')
-))
 
 var lightbox = require('./lightbox')()
 document.body.appendChild(lightbox)
@@ -204,41 +202,7 @@ var streams = {
 
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
-  // console.log(data);
-
-  data = { data: data, moment: moment }
-
-  return Jade(data, "view/post.jade")
-
-  // return h('span', h('div.post',
-  //   h('div.title',
-  //     click(
-  //       name(data.value.author),
-  //       function () {
-  //         createPanel(streams.user(data.value.author))
-  //       }
-  //     ),
-  //     ' ',
-  //     h('label', data.value.content.type || 'encrypted'),
-  //     ' ',
-  //     click(
-  //       moment(data.value.timestamp).fromNow(),
-  //       function () {
-  //         createPanel(streams.thread(data.value.content.root || data.key))
-  //       }
-  //     )
-  //   ),
-  //   h('div', {
-  //       style: {width: px(450), overflow: 'hidden'}
-  //     },
-  //     data.value.content.text ? (function () {
-  //       var text = h('div')
-  //       text.innerHTML = markdown.block(data.value.content.text, data.value.content.mentions)
-  //       return text
-  //     })() : h('pre', JSON.stringify(data.value.content))
-  //   ),
-  //   feedback(data.key)
-  // ), h('hr'))
+  return Jade({ data: data, moment: moment }, view.post)
 }
 
 //create a panel (column) from a stream of messages.
@@ -413,21 +377,27 @@ function createPanel (el, stream) {
 
 }
 
-ssbc(function (err, _sbot) {
-  if(err) {
-    document.body.appendChild(
-      ERR = h('pre', {style: {
-        position: 'fixed', left: px(20), top: px(20)
-      }}, err.stack)
-    )
-    return
-  }
+require('./reconnect')(function (cb) {
+  var ws = WS.connect('ws://localhost:8000/')
+  sbot = window.CLIENT = 
+    MuxRpc(require('./manifest.json'), null, Serializer)()
+
+  pull(ws, sbot.createStream(), pull.through(null, cb), ws)
+
   console.log('connected...', Date.now() - start)
-  sbot = _sbot
-  var el = Jade(null, 'view/layout.jade')
+  var el = Jade(null, view.layout)
   document.body.appendChild(el)
   var content = el.querySelector('#content')
-  console.log()
   createPanel(content, streams.all())
-//  createPanel(streams.all())
+
 })
+
+
+
+
+
+
+
+
+
+

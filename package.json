@@ -15,26 +15,34 @@
     "marked": "^0.3.5",
     "minimist": "^1.2.0",
     "moment": "^2.11.0",
+    "muxrpc": "^6.3.3",
     "observable": "^2.1.4",
     "pull-defer": "^0.2.1",
     "pull-identify-filetype": "^1.0.2",
-    "pull-scroll": "0.0.0",
+    "pull-scroll": "0.0.1",
+    "pull-serializer": "^0.3.2",
     "pull-stringify": "^1.2.2",
+    "pull-ws-server": "^1.7.0",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git#23e7009661b3ca7b87310d76fe78f39ffeda0acd",
     "ssb-http": "0.0.1",
     "ssb-links": "^1.0.1",
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "0.0.1",
     "ssb-msgs": "^5.2.0",
-    "ssb-query": "0.0.1",
+    "ssb-query": "0.0.2",
     "stack": "^0.1.0",
     "suggest-box": "^2.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "brfs": "^1.4.3",
+    "browserify": "^13.0.0"
+  },
   "scripts": {
+    "build": "browserify -t brfs index.js | indexhtmlify --style static/bootstrap.min.css > static/index.html",
     "start": "node server.js & electro index.js",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
+
