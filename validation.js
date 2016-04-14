@@ -24,7 +24,7 @@ function valid(test, msg) {
 }
 
 function isTag(t) {
-  return /^\#[A-z0-9_\-]+$/
+  return /^\#[A-z0-9_\-]+$/.test(t)
 }
 
 function isNumber (n) {
