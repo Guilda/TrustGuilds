@@ -1,4 +1,5 @@
 var api = require('./api')
+var pull = require('pull-stream')
 
 if(!module.parent) {
   var _require = require
