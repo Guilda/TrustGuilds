@@ -4,20 +4,20 @@
   .panel-body
     p.lead #{data.value.content.oneLiner}
 
-    a(href="#")
+    a(href="/#u/#{ data.value.author }")
       span #{ data.value.author }
-    a(href="#")
+    a(href="/#u/#{ data.value.credits }")
       span #{ data.value.credits }
     
     if data.value.content
       label #{ data.value.content.type || 'encrypted' }
     
-    a(href="#") #{ moment(data.value.timestamp).fromNow() }
+    p #{ moment(data.value.timestamp).fromNow() }
     div(style: "width: 450px; overflow: hidden;")
     
       p.summary #{ data.value.content.summary }
       
       each tag in data.value.content.tags 
         span.tag
-          a(href="#")= tag
+          a(href="/#t/#{tag}")= tag
         

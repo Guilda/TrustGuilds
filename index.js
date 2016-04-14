@@ -44,8 +44,13 @@ function Jade (data, template){
 
 //var dock = Columns({width: 600, margin: 20})
 
-document.body.style.margin = px(0)
-document.body.style.padding = px(0)
+// document.body.style.margin = px(0)
+// document.body.style.padding = px(0)
+// window.onhashchange(function(){
+//   console.log("hash change")
+// })
+
+
 
 document.body.appendChild(h('style', '.selected { color: red };'))
 
