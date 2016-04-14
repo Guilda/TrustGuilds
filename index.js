@@ -15,6 +15,7 @@ var Columns = require('column-deck')
 var Stack = require('column-deck/stack')
 
 var moment = require('moment')
+var jade = require('jade')
 
 function px (n) { return n+'px' }
 
@@ -176,37 +177,51 @@ var streams = {
   }
 }
 
+
+// With this data, render the given template at path
+function renderWithTemplate(data, template_path){
+  var rendered_page = jade.renderFile(template_path, { self: data });
+  var new_page_element = document.createElement('div')
+
+  new_page_element.innerHTML = rendered_page;
+
+  return new_page_element;
+}
+
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
-  return h('span', h('div.post',
-    h('div.title',
-      click(
-        name(data.value.author),
-        function () {
-          createPanel(streams.user(data.value.author))
-        }
-      ),
-      ' ',
-      h('label', data.value.content.type || 'encrypted'),
-      ' ',
-      click(
-        moment(data.value.timestamp).fromNow(),
-        function () {
-          createPanel(streams.thread(data.value.content.root || data.key))
-        }
-      )
-    ),
-    h('div', {
-        style: {width: px(450), overflow: 'hidden'}
-      },
-      data.value.content.text ? (function () {
-        var text = h('div')
-        text.innerHTML = markdown.block(data.value.content.text, data.value.content.mentions)
-        return text
-      })() : h('pre', JSON.stringify(data.value.content))
-    ),
-    feedback(data.key)
-  ), h('hr'))
+
+  return renderWithTemplate(data, "view/post.jade")
+
+  // return h('span', h('div.post',
+  //   h('div.title',
+  //     click(
+  //       name(data.value.author),
+  //       function () {
+  //         createPanel(streams.user(data.value.author))
+  //       }
+  //     ),
+  //     ' ',
+  //     h('label', data.value.content.type || 'encrypted'),
+  //     ' ',
+  //     click(
+  //       moment(data.value.timestamp).fromNow(),
+  //       function () {
+  //         createPanel(streams.thread(data.value.content.root || data.key))
+  //       }
+  //     )
+  //   ),
+  //   h('div', {
+  //       style: {width: px(450), overflow: 'hidden'}
+  //     },
+  //     data.value.content.text ? (function () {
+  //       var text = h('div')
+  //       text.innerHTML = markdown.block(data.value.content.text, data.value.content.mentions)
+  //       return text
+  //     })() : h('pre', JSON.stringify(data.value.content))
+  //   ),
+  //   feedback(data.key)
+  // ), h('hr'))
 }
 
 //create a panel (column) from a stream of messages.
@@ -345,4 +360,3 @@ ssbc(function (err, _sbot) {
   sbot = _sbot
   createPanel(streams.all())
 })
-
