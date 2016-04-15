@@ -65,8 +65,6 @@ if ("onhashchange" in window) {
 function render_tag(tag)
 {
   console.log("render_tag " + tag)
-
-
 }
 
 function render_person(person)
@@ -75,7 +73,6 @@ function render_person(person)
 
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
-
   console.log("About to pull omg")
 
   pull( streams.user(person), pull.through( function(chunk){
@@ -85,9 +82,7 @@ function render_person(person)
     console.log("STREAM CLOSED")
   }))
 
-
   console.log("DONE")
-
 
   // console.log(streams.user(person));
   createPanel(content, streams.user(person))
@@ -327,9 +322,9 @@ function createPanel (el, stream) {
 
           click('publish', function () {
 
-            //TODO: get link if it is a message and credit it to
-            //the author.
-            var credit
+            // If valid, publish this curation
+            try{
+              validation.curation(content)
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
@@ -438,6 +433,13 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
+
+
+
+
+
+
 
 
 
