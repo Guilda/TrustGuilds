@@ -79,6 +79,10 @@ var MuxRpc = require('muxrpc')
 var Serializer = require('pull-serializer')
 var WS = require('pull-ws-server/client')
 
+var ref = require('ssb-ref')
+
+var isMsg = ref.isMsg
+
 var start = Date.now()
 var defer = require('pull-defer')
 var observ = require('observable')
@@ -152,6 +156,7 @@ function setup_page()
   }
 
 }
+document.body.appendChild(h('style', '.selected {color: red}'))
 
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
@@ -434,9 +439,10 @@ function createPanel (el, stream, user) {
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
+                console.log(msg)
                 if(err)
                   return alert('could not retrive msg:'+url.value)
-                credit.value = msg.value.author
+                credit.value = msg.author
                 publish()
               })
             else
@@ -457,7 +463,7 @@ function createPanel (el, stream, user) {
               }
 
               // If valid, publish this curation
-              try{
+              try {
                 validation.curation(content)
 
                 sbot.publish(content, function (err, msg) {
@@ -465,9 +471,10 @@ function createPanel (el, stream, user) {
                   lightbox.close()
                 })
               }
-              catch(e){
+              catch(e) {
                 alert(e);
               }
+
             }
           }, 'btn btn-success')
         ))
@@ -481,17 +488,20 @@ function createPanel (el, stream, user) {
           if(embed) sigil = '&'
           if(word[0] !== '@') word = word.substring(1)
 
-          first(
+          pull(
             sbot.links2.read({query: [
               {$filter: {rel: ['mentions', {$prefix: word}], dest: {$prefix: sigil}}},
-              {$reduce: {$group: [['rel', 1], 'dest'], $count: true}}
+              {$reduce:
+                  {name: ['rel', 1], id: 'dest', count: {$count: true}}
+//                $group: [['rel', 1], 'dest'], $reduce: {$count: true}}
+              }
             ]}),
-            function (err, names) {
-              var ary = []
-              for(var name in names)
-                for(var id in names[name])
-                  ary.push({name: name, id: id, count: names[name][id]})
-
+            pull.collect(function (err, ary) {
+  //            var ary = []
+//              for(var name in names)
+//                for(var id in names[name])
+//                  ary.push({name: name, id: id, count: names[name][id]})
+//
               ary = ary
               .filter(function (e) {
                 if(!embed) return true
@@ -505,8 +515,10 @@ function createPanel (el, stream, user) {
                 }
               })
 
+          console.log('array', ary)
+
               cb(null, ary)
-            }
+            })
           )
         })
       })
@@ -542,7 +554,7 @@ require('./reconnect')(function (cb) {
 })
 
 }).call(this,require("buffer").Buffer)
-},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":142,"./status":143,"./validation":144,"buffer":18,"column-deck/stack":23,"hyperscript":31,"jade":41,"moment":63,"muxrpc":65,"observable":76,"path":79,"pull-cat":82,"pull-defer":85,"pull-scroll":94,"pull-serializer":100,"pull-stream":108,"pull-ws-server/client":115,"ssb-markdown":124,"ssb-mentions":127,"suggest-box":131}],3:[function(require,module,exports){
+},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":142,"./status":143,"./validation":144,"buffer":18,"column-deck/stack":23,"hyperscript":31,"jade":41,"moment":63,"muxrpc":65,"observable":76,"path":79,"pull-cat":82,"pull-defer":85,"pull-scroll":94,"pull-serializer":100,"pull-stream":108,"pull-ws-server/client":115,"ssb-markdown":124,"ssb-mentions":127,"ssb-ref":128,"suggest-box":131}],3:[function(require,module,exports){
 var h = require('hyperscript')
 
 function width (el) {

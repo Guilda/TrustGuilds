@@ -26,12 +26,13 @@
     "pull-stringify": "^1.2.2",
     "pull-ws-server": "^1.7.0",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git#23e7009661b3ca7b87310d76fe78f39ffeda0acd",
-    "ssb-http": "0.0.1",
+    "ssb-http": "0.0.2",
     "ssb-links": "^1.0.1",
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "0.0.1",
     "ssb-msgs": "^5.2.0",
     "ssb-query": "0.0.2",
+    "ssb-ref": "^2.3.0",
     "stack": "^0.1.0",
     "suggest-box": "^2.0.0"
   },
@@ -44,9 +45,8 @@
     "build": "browserify -t brfs index.js > static/bundle.js",
     "start": "node server.js; echo open UI at http://localhost:8000/",
     "test": "set -e; for t in test/*.js; do node $t; done",
-    "watch": "watchify index.js -o static/bundle.js -dv"
+    "watch": "watchify -t brfs index.js -o static/bundle.js -dv"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
-
