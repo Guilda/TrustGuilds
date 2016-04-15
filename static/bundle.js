@@ -79,6 +79,10 @@ var MuxRpc = require('muxrpc')
 var Serializer = require('pull-serializer')
 var WS = require('pull-ws-server/client')
 
+var ref = require('ssb-ref')
+
+var isMsg = ref.isMsg
+
 var start = Date.now()
 var defer = require('pull-defer')
 var observ = require('observable')
@@ -533,7 +537,7 @@ require('./reconnect')(function (cb) {
 
 
 }).call(this,require("buffer").Buffer)
-},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":140,"./status":141,"./validation":142,"buffer":16,"column-deck/stack":21,"hyperscript":27,"jade":37,"moment":59,"muxrpc":61,"observable":72,"path":75,"pull-cat":78,"pull-defer":81,"pull-scroll":90,"pull-serializer":96,"pull-stream":104,"pull-ws-server/client":111,"ssb-markdown":120,"ssb-mentions":122,"suggest-box":127}],3:[function(require,module,exports){
+},{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":140,"./status":141,"./validation":142,"buffer":16,"column-deck/stack":21,"hyperscript":27,"jade":37,"moment":59,"muxrpc":61,"observable":72,"path":75,"pull-cat":78,"pull-defer":81,"pull-scroll":90,"pull-serializer":96,"pull-stream":104,"pull-ws-server/client":111,"ssb-markdown":120,"ssb-mentions":122,"ssb-ref":124,"suggest-box":127}],3:[function(require,module,exports){
 var h = require('hyperscript')
 
 function width (el) {
@@ -24175,7 +24179,7 @@ function onListMouseDown(e) {
 
 function render(box) {
   var cls = (box.options.cls) ? ('.'+box.options.cls) : ''
-  return window.SUGGEST=h('.suggest-box'+cls, { style: { left: (box.x+'px'), top: (box.y+'px'), position: 'fixed' } }, [
+  return h('.suggest-box'+cls, { style: { left: (box.x+'px'), top: (box.y+'px'), position: 'fixed' } }, [
     h('ul', {
       onmousemove: onListMouseMove.bind(box),
       onmouseover: onListMouseOver.bind(box),
