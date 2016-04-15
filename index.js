@@ -45,6 +45,25 @@ function Jade (data, template){
   return new_page_element;
 }
 
+function addNames(el) {
+  var n = el.querySelector('.name')
+  var i;
+
+  var id = n.textContent
+  n.innerHTML = ''
+  n.appendChild(name(id))
+//  for (i = 0; i < names.length; i++) {
+//    console.log(names[i])
+//    var text_content = names[i].textContent
+//
+//    console.log(name(text_content))
+//
+//    names[i].innerHTML = ""
+//    names[i].appendChild( name(text_content) )
+//  }
+
+}
+
 // Setup per page render stuff
 function setup_page()
 {
@@ -66,17 +85,6 @@ function setup_page()
   }
 
 
-  names = document.getElementsByClassName('name')
-  var i;
-  for (i = 0; i < names.length; i++) {
-    console.log(names[i])
-    var text_content = names[i].textContent
-
-    console.log(name(text_content))
-
-    names[i].innerHTML = ""
-    names[i].appendChild( name(text_content) )
-  }
 
 }
 
@@ -286,7 +294,9 @@ var streams = {
 
 function render (data) {
   if(!data.value) throw new Error('data missing value property')
-  return Jade({ data: data, moment: moment }, view.post)
+  var el = Jade({ data: data, moment: moment }, view.post)
+  addNames(el)
+  return el
 }
 
 //create a panel (column) from a stream of messages.
@@ -489,4 +499,5 @@ require('./reconnect')(function (cb) {
 
   setup_page()
 })
+
 
