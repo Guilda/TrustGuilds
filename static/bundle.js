@@ -147,23 +147,26 @@ if ("onhashchange" in window) {
 
 function render_feed()
 {
-  var content = document.body.querySelector('#content')
-  content.innerHTML = ""
-
-  createPanel(content, streams.all)
+  render_to_panel(streams.all())
 }
 
 function render_tag(tag)
 {
-  console.log("render_tag " + tag)
+  render_to_panel(streams.curations_for_tags(tag))
 }
 
 function render_person(person)
 {
+  render_to_panel(streams.user(person))
+}
+
+// Helper to render stuff in a stream to a panel
+function render_to_panel(stuff)
+{
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
 
-  createPanel(content, streams.user(person))
+  createPanel(content, stuff)
 }
 
 
@@ -287,8 +290,14 @@ var streams = {
   all: function () {
     return API(sbot).curations()
   },
+  curations_for_tags: function (tags) {
+    return API(sbot).curations(tags)
+  },
   user: function (id) {
     return sbot.createUserStream({ id: id, reverse: true })
+  },
+  tags: function () {
+    return API(sbot).tags()
   },
   thread: function (root) {
     //in this case, it's inconvienent that panel only takes
