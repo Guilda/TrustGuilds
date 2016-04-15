@@ -343,6 +343,7 @@ function createPanel (el, stream, user) {
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
+                console.log(msg)
                 if(err)
                   return alert('could not retrive msg:'+url.value)
                 credit.value = msg.author
