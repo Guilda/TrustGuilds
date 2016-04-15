@@ -345,7 +345,7 @@ function createPanel (el, stream, user) {
               sbot.get(url.value, function (err, msg) {
                 if(err)
                   return alert('could not retrive msg:'+url.value)
-                credit.value = msg.value.author
+                credit.value = msg.author
                 publish()
               })
             else
