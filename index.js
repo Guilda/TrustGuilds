@@ -2,6 +2,10 @@ var MuxRpc = require('muxrpc')
 var Serializer = require('pull-serializer')
 var WS = require('pull-ws-server/client')
 
+var ref = require('ssb-ref')
+
+var isMsg = ref.isMsg
+
 var start = Date.now()
 var defer = require('pull-defer')
 var observ = require('observable')
