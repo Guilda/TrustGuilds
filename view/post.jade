@@ -1,6 +1,7 @@
 .post.panel.panel-default
   .panel-heading
-    h2 #{data.value.content.title}
+    a(href = data.value.content.curate)
+      h2 #{data.value.content.title}
   .panel-body
     p.lead #{data.value.content.oneLiner}
 
