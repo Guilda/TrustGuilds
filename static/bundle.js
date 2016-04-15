@@ -5,6 +5,24 @@ var pull = require('pull-stream')
 //all curations
 module.exports = function (sbot) {
   return {
+    tags: function (opts) {
+      return pull(
+        sbot.query.read({query: [
+          {$filter: {value: {content: {
+            type: "curation",
+            curate: {$prefix: ''}
+          }}}},
+          {$map: ['value', 'content', 'tags']}
+        ]}),
+        pull.flatten(),
+        pull.map(function (e) {
+          return e.split(/[ ,]+/)
+        }),
+        pull.flatten(),
+        pull.filter(v.isTag)
+      )
+    },
+
     //all curations.
     curations: function (opts) {
       var tags = []
@@ -27,6 +45,7 @@ module.exports = function (sbot) {
     }
   }
 }
+
 
 
 
@@ -114,8 +133,11 @@ function render_person(person)
   console.log("About to pull omg")
 
   pull( streams.user(person), pull.through( function(chunk){
+    console.log("something in stream")
     console.log(chunk)
-  }, function(e){ console.log("STREAM CLOSED")}))
+  }, function(e){
+    console.log("STREAM CLOSED")
+  }))
 
 
   console.log("DONE")
@@ -376,7 +398,7 @@ function createPanel (el, stream) {
               oneLiner: one_liner.value,
               summary: summary.value,
               mentions: mentions(summary.value),
-              tags: tags.value.split(),
+              tags: tags.value.split(" "),
               rating: parseFloat(rating.value)
             }
 
@@ -463,13 +485,6 @@ require('./reconnect')(function (cb) {
 
 })
 
-
-
-
-
-
-
-
 }).call(this,require("buffer").Buffer)
 },{"./api":1,"./lightbox":3,"./manifest.json":4,"./reconnect":141,"./status":142,"./validation":143,"buffer":18,"column-deck/stack":23,"hyperscript":31,"jade":41,"moment":63,"muxrpc":65,"observable":76,"path":79,"pull-cat":82,"pull-defer":85,"pull-scroll":94,"pull-serializer":100,"pull-stream":107,"pull-ws-server/client":114,"ssb-markdown":123,"ssb-mentions":126,"suggest-box":130}],3:[function(require,module,exports){
 var h = require('hyperscript')
@@ -487,7 +502,7 @@ function px(p) { return p+'px' }
 module.exports = function () {
   var lightbox = h('div', {style: {
     background: 'white', border: '1px solid black',
-    position: 'fixed', top: px(20), left: px(20),
+    position: 'absolute', top: px(20), left: px(20),
     display: 'none',
     padding: px(10)
   }})
@@ -509,7 +524,6 @@ module.exports = function () {
 
   return lightbox
 }
-
 
 },{"hyperscript":31}],4:[function(require,module,exports){
 module.exports={
