@@ -50,9 +50,15 @@ if ("onhashchange" in window) {
     chunks = location.hash.split("/")
 
     var type = chunks[0]
-    var singular = chunks[1]
+    var singular = decodeURIComponent(chunks[1])
 
-    if(type === "#t")
+    console.log(type)
+
+    if(type === "")
+    {
+      render_feed()
+    }
+    else if(type === "#t")
     {
       render_tag(singular);
     }
@@ -62,6 +68,14 @@ if ("onhashchange" in window) {
   }
 }
 
+function render_feed()
+{
+  var content = document.body.querySelector('#content')
+  content.innerHTML = ""
+
+  createPanel(content, streams.all())
+}
+
 function render_tag(tag)
 {
   console.log("render_tag " + tag)
@@ -69,22 +83,9 @@ function render_tag(tag)
 
 function render_person(person)
 {
-  console.log("render_person " + person)
-
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
-  console.log("About to pull omg")
 
-  pull( streams.user(person), pull.through( function(chunk){
-    console.log("something in stream")
-    console.log(chunk)
-  }, function(e){
-    console.log("STREAM CLOSED")
-  }))
-
-  console.log("DONE")
-
-  // console.log(streams.user(person));
   createPanel(content, streams.user(person))
 }
 

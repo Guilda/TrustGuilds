@@ -4,9 +4,9 @@
   .panel-body
     p.lead #{data.value.content.oneLiner}
 
-    a(href="/#u/#{ data.value.author }")
+    a(href="/#u/#{ encodeURIComponent(data.value.author) }")
       span #{ data.value.author }
-    a(href="/#u/#{ data.value.credits }")
+    a(href="/#u/#{ encodeURIComponent(data.value.credits) }")
       span #{ data.value.credits }
     
     if data.value.content

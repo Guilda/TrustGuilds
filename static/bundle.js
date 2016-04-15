@@ -106,8 +106,8 @@ var validation = require('./validation')
 function px (n) { return n+'px' }
 
 var view = {
-  layout: jade.compile(Buffer("I2hlYWRlcgogIGgxIEVudHJ1c3QKICBpbnB1dCNzZWFyY2gKI2NvbnRlbnQK","base64")),
-  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGRhdGEudmFsdWUuYXV0aG9yIH0iKQogICAgICBzcGFuICN7IGRhdGEudmFsdWUuYXV0aG9yIH0KICAgIGEoaHJlZj0iLyN1LyN7IGRhdGEudmFsdWUuY3JlZGl0cyB9IikKICAgICAgc3BhbiAjeyBkYXRhLnZhbHVlLmNyZWRpdHMgfQogICAgCiAgICBpZiBkYXRhLnZhbHVlLmNvbnRlbnQKICAgICAgbGFiZWwgI3sgZGF0YS52YWx1ZS5jb250ZW50LnR5cGUgfHwgJ2VuY3J5cHRlZCcgfQogICAgCiAgICBwICN7IG1vbWVudChkYXRhLnZhbHVlLnRpbWVzdGFtcCkuZnJvbU5vdygpIH0KICAgIGRpdihzdHlsZTogIndpZHRoOiA0NTBweDsgb3ZlcmZsb3c6IGhpZGRlbjsiKQogICAgCiAgICAgIHAuc3VtbWFyeSAjeyBkYXRhLnZhbHVlLmNvbnRlbnQuc3VtbWFyeSB9CiAgICAgIAogICAgICBlYWNoIHRhZyBpbiBkYXRhLnZhbHVlLmNvbnRlbnQudGFncyAKICAgICAgICBzcGFuLnRhZwogICAgICAgICAgYShocmVmPSIvI3QvI3t0YWd9Iik9IHRhZwogICAgICAgIAo=","base64"))
+  layout: jade.compile(Buffer("I2hlYWRlcgogIGgxIAogICAgYShocmVmPSIjIikgRW50cnVzdAogIGlucHV0I3NlYXJjaAojY29udGVudAo=","base64")),
+  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGVuY29kZVVSSUNvbXBvbmVudChkYXRhLnZhbHVlLmF1dGhvcikgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5hdXRob3IgfQogICAgYShocmVmPSIvI3UvI3sgZW5jb2RlVVJJQ29tcG9uZW50KGRhdGEudmFsdWUuY3JlZGl0cykgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5jcmVkaXRzIH0KICAgIAogICAgaWYgZGF0YS52YWx1ZS5jb250ZW50CiAgICAgIGxhYmVsICN7IGRhdGEudmFsdWUuY29udGVudC50eXBlIHx8ICdlbmNyeXB0ZWQnIH0KICAgIAogICAgcCAjeyBtb21lbnQoZGF0YS52YWx1ZS50aW1lc3RhbXApLmZyb21Ob3coKSB9CiAgICBkaXYoc3R5bGU6ICJ3aWR0aDogNDUwcHg7IG92ZXJmbG93OiBoaWRkZW47IikKICAgIAogICAgICBwLnN1bW1hcnkgI3sgZGF0YS52YWx1ZS5jb250ZW50LnN1bW1hcnkgfQogICAgICAKICAgICAgZWFjaCB0YWcgaW4gZGF0YS52YWx1ZS5jb250ZW50LnRhZ3MgCiAgICAgICAgc3Bhbi50YWcKICAgICAgICAgIGEoaHJlZj0iLyN0LyN7dGFnfSIpPSB0YWcKICAgICAgICAK","base64"))
 }
 
 // With this data, render the given template at path
@@ -127,9 +127,15 @@ if ("onhashchange" in window) {
     chunks = location.hash.split("/")
 
     var type = chunks[0]
-    var singular = chunks[1]
+    var singular = decodeURIComponent(chunks[1])
 
-    if(type === "#t")
+    console.log(type)
+
+    if(type === "")
+    {
+      render_feed()
+    }
+    else if(type === "#t")
     {
       render_tag(singular);
     }
@@ -139,6 +145,14 @@ if ("onhashchange" in window) {
   }
 }
 
+function render_feed()
+{
+  var content = document.body.querySelector('#content')
+  content.innerHTML = ""
+
+  createPanel(content, streams.all)
+}
+
 function render_tag(tag)
 {
   console.log("render_tag " + tag)
@@ -146,22 +160,9 @@ function render_tag(tag)
 
 function render_person(person)
 {
-  console.log("render_person " + person)
-
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
-  console.log("About to pull omg")
 
-  pull( streams.user(person), pull.through( function(chunk){
-    console.log("something in stream")
-    console.log(chunk)
-  }, function(e){
-    console.log("STREAM CLOSED")
-  }))
-
-  console.log("DONE")
-
-  // console.log(streams.user(person));
   createPanel(content, streams.user(person))
 }
 
