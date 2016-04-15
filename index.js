@@ -41,6 +41,8 @@ function Jade (data, template){
 }
 
 
+document.body.appendChild(h('style', '.selected {color: red}'))
+
 // document.body.style.margin = px(0)
 // document.body.style.padding = px(0)
 
@@ -323,8 +325,6 @@ function createPanel (el, stream) {
           click('publish', function () {
 
             // If valid, publish this curation
-            try{
-              validation.curation(content)
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
@@ -351,7 +351,7 @@ function createPanel (el, stream) {
               }
 
               // If valid, publish this curation
-              try{
+              try {
                 validation.curation(content)
 
                 sbot.publish(content, function (err, msg) {
@@ -359,9 +359,10 @@ function createPanel (el, stream) {
                   lightbox.close()
                 })
               }
-              catch(e){
+              catch(e) {
                 alert(e);
               }
+
             }
           }, 'btn btn-success')
         ))
@@ -375,17 +376,20 @@ function createPanel (el, stream) {
           if(embed) sigil = '&'
           if(word[0] !== '@') word = word.substring(1)
 
-          first(
+          pull(
             sbot.links2.read({query: [
               {$filter: {rel: ['mentions', {$prefix: word}], dest: {$prefix: sigil}}},
-              {$reduce: {$group: [['rel', 1], 'dest'], $count: true}}
+              {$reduce:
+                  {name: ['rel', 1], id: 'dest', count: {$count: true}}
+//                $group: [['rel', 1], 'dest'], $reduce: {$count: true}}
+              }
             ]}),
-            function (err, names) {
-              var ary = []
-              for(var name in names)
-                for(var id in names[name])
-                  ary.push({name: name, id: id, count: names[name][id]})
-
+            pull.collect(function (err, ary) {
+  //            var ary = []
+//              for(var name in names)
+//                for(var id in names[name])
+//                  ary.push({name: name, id: id, count: names[name][id]})
+//
               ary = ary
               .filter(function (e) {
                 if(!embed) return true
@@ -399,8 +403,10 @@ function createPanel (el, stream) {
                 }
               })
 
+          console.log('array', ary)
+
               cb(null, ary)
-            }
+            })
           )
         })
       })
@@ -433,6 +439,11 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
+
+
+
+
 
 
 
