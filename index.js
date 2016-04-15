@@ -323,8 +323,6 @@ function createPanel (el, stream) {
           click('publish', function () {
 
             // If valid, publish this curation
-            try{
-              validation.curation(content)
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
@@ -433,22 +431,3 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
