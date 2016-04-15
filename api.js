@@ -18,7 +18,22 @@ module.exports = function (sbot) {
           return e.split(/[ ,]+/)
         }),
         pull.flatten(),
-        pull.filter(v.isTag)
+        pull.filter(v.isTag),
+        pull.unique()
+      )
+    },
+
+    person: function (person) {
+      return pull(
+        sbot.query.read({query: [
+          {$filter: {value: {
+            content: {
+              type: "curation",
+              curate: {$prefix: ''}
+            },
+            author: person
+          }}}
+        ]})
       )
     },
 
@@ -44,6 +59,7 @@ module.exports = function (sbot) {
     }
   }
 }
+
 
 
 
