@@ -30,7 +30,8 @@ function px (n) { return n+'px' }
 
 var view = {
   layout: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'layout.jade'))),
-  post: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'post.jade')))
+  post: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'post.jade'))),
+  person: jade.compile(fs.readFileSync(path.join(__dirname, 'view', 'person.jade')))
 }
 
 // With this data, render the given template at path
@@ -40,10 +41,6 @@ function Jade (data, template){
   return new_page_element;
 }
 
-
-// document.body.style.margin = px(0)
-// document.body.style.padding = px(0)
-
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
   window.onhashchange = function(){
@@ -51,8 +48,6 @@ if ("onhashchange" in window) {
 
     var type = chunks[0]
     var singular = decodeURIComponent(chunks[1])
-
-    console.log(type)
 
     if(type === "")
     {
@@ -80,16 +75,16 @@ function render_tag(tag)
 
 function render_person(person)
 {
-  render_to_panel(streams.user(person))
+  render_to_panel(streams.user(person), person)
 }
 
 // Helper to render stuff in a stream to a panel
-function render_to_panel(stuff)
+function render_to_panel(stuff, person)
 {
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
 
-  createPanel(content, stuff)
+  createPanel(content, stuff, person)
 }
 
 
@@ -271,7 +266,7 @@ function render (data) {
 //is that I want to make a column be a rendering of any database query.
 //(TODO, expand on the patterns in ssb-links)
 
-function createPanel (el, stream) {
+function createPanel (el, stream, user) {
   var scroll = h('div', {
     style: {
       height: '100%', //MAGIC.
@@ -280,6 +275,12 @@ function createPanel (el, stream) {
   })
 
   el.innerHTML = ''
+
+  if(user) {
+    el.appendChild(
+      h('div').innerHTML = Jade({ data: user, moment: moment }, view.person)
+    )
+  }
 
   var stack = Stack()
     .addFixed(h('h3', 'feed', {style: {background: 'grey'}},
@@ -416,6 +417,8 @@ function createPanel (el, stream) {
     .addFitted(scroll)
 
     el.appendChild(stack)
+
+
 
   pull(
     stream,

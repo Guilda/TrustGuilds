@@ -107,7 +107,8 @@ function px (n) { return n+'px' }
 
 var view = {
   layout: jade.compile(Buffer("I2hlYWRlcgogIGgxIAogICAgYShocmVmPSIvIikgRW50cnVzdAogIGlucHV0I3NlYXJjaAojY29udGVudAo=","base64")),
-  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBhKGhyZWYgPSBkYXRhLnZhbHVlLmNvbnRlbnQuY3VyYXRlKQogICAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGVuY29kZVVSSUNvbXBvbmVudChkYXRhLnZhbHVlLmF1dGhvcikgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5hdXRob3IgfQogICAgYShocmVmPSIvI3UvI3sgZW5jb2RlVVJJQ29tcG9uZW50KGRhdGEudmFsdWUuY3JlZGl0cykgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5jcmVkaXRzIH0KICAgIAogICAgaWYgZGF0YS52YWx1ZS5jb250ZW50CiAgICAgIGxhYmVsICN7IGRhdGEudmFsdWUuY29udGVudC50eXBlIHx8ICdlbmNyeXB0ZWQnIH0KICAgIAogICAgcCAjeyBtb21lbnQoZGF0YS52YWx1ZS50aW1lc3RhbXApLmZyb21Ob3coKSB9CiAgICBkaXYoc3R5bGU6ICJ3aWR0aDogNDUwcHg7IG92ZXJmbG93OiBoaWRkZW47IikKICAgIAogICAgICBwLnN1bW1hcnkgI3sgZGF0YS52YWx1ZS5jb250ZW50LnN1bW1hcnkgfQogICAgICAKICAgICAgZWFjaCB0YWcgaW4gZGF0YS52YWx1ZS5jb250ZW50LnRhZ3MgCiAgICAgICAgc3Bhbi50YWcKICAgICAgICAgIGEoaHJlZj0iLyN0LyN7dGFnfSIpPSB0YWcKICAgICAgICAK","base64"))
+  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBhKGhyZWYgPSBkYXRhLnZhbHVlLmNvbnRlbnQuY3VyYXRlKQogICAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGVuY29kZVVSSUNvbXBvbmVudChkYXRhLnZhbHVlLmF1dGhvcikgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5hdXRob3IgfQogICAgYShocmVmPSIvI3UvI3sgZW5jb2RlVVJJQ29tcG9uZW50KGRhdGEudmFsdWUuY3JlZGl0cykgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5jcmVkaXRzIH0KICAgIAogICAgaWYgZGF0YS52YWx1ZS5jb250ZW50CiAgICAgIGxhYmVsICN7IGRhdGEudmFsdWUuY29udGVudC50eXBlIHx8ICdlbmNyeXB0ZWQnIH0KICAgIAogICAgcCAjeyBtb21lbnQoZGF0YS52YWx1ZS50aW1lc3RhbXApLmZyb21Ob3coKSB9CiAgICBkaXYoc3R5bGU6ICJ3aWR0aDogNDUwcHg7IG92ZXJmbG93OiBoaWRkZW47IikKICAgIAogICAgICBwLnN1bW1hcnkgI3sgZGF0YS52YWx1ZS5jb250ZW50LnN1bW1hcnkgfQogICAgICAKICAgICAgZWFjaCB0YWcgaW4gZGF0YS52YWx1ZS5jb250ZW50LnRhZ3MgCiAgICAgICAgc3Bhbi50YWcKICAgICAgICAgIGEoaHJlZj0iLyN0LyN7dGFnfSIpPSB0YWcKICAgICAgICAK","base64")),
+  person: jade.compile(Buffer("aDEgI3sgZGF0YSB9Cg==","base64"))
 }
 
 // With this data, render the given template at path
@@ -117,10 +118,6 @@ function Jade (data, template){
   return new_page_element;
 }
 
-
-// document.body.style.margin = px(0)
-// document.body.style.padding = px(0)
-
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
   window.onhashchange = function(){
@@ -128,8 +125,6 @@ if ("onhashchange" in window) {
 
     var type = chunks[0]
     var singular = decodeURIComponent(chunks[1])
-
-    console.log(type)
 
     if(type === "")
     {
@@ -157,16 +152,16 @@ function render_tag(tag)
 
 function render_person(person)
 {
-  render_to_panel(streams.user(person))
+  render_to_panel(streams.user(person), person)
 }
 
 // Helper to render stuff in a stream to a panel
-function render_to_panel(stuff)
+function render_to_panel(stuff, person)
 {
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
 
-  createPanel(content, stuff)
+  createPanel(content, stuff, person)
 }
 
 
@@ -348,7 +343,7 @@ function render (data) {
 //is that I want to make a column be a rendering of any database query.
 //(TODO, expand on the patterns in ssb-links)
 
-function createPanel (el, stream) {
+function createPanel (el, stream, user) {
   var scroll = h('div', {
     style: {
       height: '100%', //MAGIC.
@@ -357,6 +352,12 @@ function createPanel (el, stream) {
   })
 
   el.innerHTML = ''
+
+  if(user) {
+    el.appendChild(
+      h('div').innerHTML = Jade({ data: user, moment: moment }, view.person)
+    )
+  }
 
   var stack = Stack()
     .addFixed(h('h3', 'feed', {style: {background: 'grey'}},
@@ -493,6 +494,8 @@ function createPanel (el, stream) {
     .addFitted(scroll)
 
     el.appendChild(stack)
+
+
 
   pull(
     stream,
