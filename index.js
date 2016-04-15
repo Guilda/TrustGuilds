@@ -2,6 +2,10 @@ var MuxRpc = require('muxrpc')
 var Serializer = require('pull-serializer')
 var WS = require('pull-ws-server/client')
 
+var ref = require('ssb-ref')
+
+var isMsg = ref.isMsg
+
 var start = Date.now()
 var defer = require('pull-defer')
 var observ = require('observable')
@@ -75,6 +79,8 @@ function setup_page()
   }
 
 }
+
+document.body.appendChild(h('style', '.selected {color: red}'))
 
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
@@ -360,9 +366,10 @@ function createPanel (el, stream, user) {
 
             if(isMsg(url.value) && !credit.value)
               sbot.get(url.value, function (err, msg) {
+                console.log(msg)
                 if(err)
                   return alert('could not retrive msg:'+url.value)
-                credit.value = msg.value.author
+                credit.value = msg.author
                 publish()
               })
             else
@@ -383,7 +390,7 @@ function createPanel (el, stream, user) {
               }
 
               // If valid, publish this curation
-              try{
+              try {
                 validation.curation(content)
 
                 sbot.publish(content, function (err, msg) {
@@ -391,9 +398,10 @@ function createPanel (el, stream, user) {
                   lightbox.close()
                 })
               }
-              catch(e){
+              catch(e) {
                 alert(e);
               }
+
             }
           }, 'btn btn-success')
         ))
@@ -407,17 +415,20 @@ function createPanel (el, stream, user) {
           if(embed) sigil = '&'
           if(word[0] !== '@') word = word.substring(1)
 
-          first(
+          pull(
             sbot.links2.read({query: [
               {$filter: {rel: ['mentions', {$prefix: word}], dest: {$prefix: sigil}}},
-              {$reduce: {$group: [['rel', 1], 'dest'], $count: true}}
+              {$reduce:
+                  {name: ['rel', 1], id: 'dest', count: {$count: true}}
+//                $group: [['rel', 1], 'dest'], $reduce: {$count: true}}
+              }
             ]}),
-            function (err, names) {
-              var ary = []
-              for(var name in names)
-                for(var id in names[name])
-                  ary.push({name: name, id: id, count: names[name][id]})
-
+            pull.collect(function (err, ary) {
+  //            var ary = []
+//              for(var name in names)
+//                for(var id in names[name])
+//                  ary.push({name: name, id: id, count: names[name][id]})
+//
               ary = ary
               .filter(function (e) {
                 if(!embed) return true
@@ -431,8 +442,10 @@ function createPanel (el, stream, user) {
                 }
               })
 
+          console.log('array', ary)
+
               cb(null, ary)
-            }
+            })
           )
         })
       })
@@ -466,3 +479,4 @@ require('./reconnect')(function (cb) {
 
   setup_page()
 })
+
