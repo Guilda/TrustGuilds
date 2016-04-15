@@ -22,6 +22,7 @@
     "pull-identify-filetype": "^1.0.2",
     "pull-scroll": "0.0.1",
     "pull-serializer": "^0.3.2",
+    "pull-sort": "^1.0.0",
     "pull-stringify": "^1.2.2",
     "pull-ws-server": "^1.7.0",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git#23e7009661b3ca7b87310d76fe78f39ffeda0acd",
