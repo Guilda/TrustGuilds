@@ -10,8 +10,6 @@
     a(href="/#u/#{ encodeURIComponent(data.value.credits) }")
       span.name #{ data.value.credits }
     
-    if data.value.content
-      label #{ data.value.content.type || 'encrypted' }
     
     p #{ moment(data.value.timestamp).fromNow() }
     div(style: "width: 450px; overflow: hidden;")
