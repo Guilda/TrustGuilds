@@ -1,5 +1,16 @@
 var v = require('./validation')
 var pull = require('pull-stream')
+var Sort = require('pull-sort')
+
+function reverse_sort(a, b) {
+  if (a.timestamp > b.timestamp) {
+    return -1;
+  }
+  if (a.timestamp < b.timestamp) {
+    return 1;
+  }
+  return 0;
+}
 
 //all curations
 module.exports = function (sbot) {
@@ -50,6 +61,7 @@ module.exports = function (sbot) {
             curate: {$prefix: ''}
           }}}}
         ]}),
+        Sort(reverse_sort),
         pull.filter(function (msg) {
           return tags.every(function (tag) {
             return ~msg.value.content.tags.indexOf(tag)
@@ -59,8 +71,3 @@ module.exports = function (sbot) {
     }
   }
 }
-
-
-
-
-
