@@ -43,8 +43,9 @@
     "build": "browserify -t brfs index.js > static/bundle.js",
     "start": "node server.js; echo open UI at http://localhost:8000/",
     "test": "set -e; for t in test/*.js; do node $t; done",
-    "watch": "watchify server.js -o static/bundle.js -dv"
+    "watch": "watchify index.js -o static/bundle.js -dv"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
 }
+
