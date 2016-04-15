@@ -281,35 +281,26 @@ function createPanel (el, stream) {
       //thread because they would need to get the most recent message
       //for the branch link.
       click('post', function () {
-        var url = h('input', {type: 'text', className: "form-control"})
-        var url_bundle = h('label', "source", url)
-
-        var title = h('input', {type: 'text', className: "form-control"})
-        var title_bundle = h('label', "title", title)
-
-        var rating = h('input', {type: 'text', className: "form-control"})
-        var rating_bundle = h('label', "rating", rating)
-
-
-        var one_liner = h('textarea', {rows: 2, cols: 80, className: "form-control"})
-        var one_liner_bundle = h('label', "one liner", one_liner)
-
-        var summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})
-        var summary_bundle = h('label', "summary", summary)
-
-        var tags = h('input', {type: 'text', className: "form-control"})
-        var tags_bundle = h('label', "tags", tags)
-
+        var url, credit, title, rating, one_liner, summary, tags
         var prev = h('span')
 
-        var form = h('form', h('div', {className: 'form-group'}))
-
-        form.appendChild(url_bundle)
-        form.appendChild(title_bundle)
-        form.appendChild(one_liner_bundle)
-        form.appendChild(rating_bundle)
-        form.appendChild(summary_bundle)
-        form.appendChild(tags_bundle)
+        var form = h('form',
+          h('div', {className: 'form-group'}),
+          h('label', "url",
+            url = h('input', {type: 'text', className: "form-control"})),
+          h('label', "credit",
+            credit = h('input', {type: 'text', className: "form-control"})),
+          h('label', "title",
+            title = h('input', {type: 'text', className: "form-control"})),
+          h('label', "rating",
+            rating = h('input', {type: 'text', className: "form-control"})),
+          h('label', "one liner",
+            one_liner = h('textarea', {rows: 2, cols: 80, className: "form-control"})),
+          h('label', "summary",
+            summary = h('textarea', {rows: 20, cols: 80, className: "form-control"})),
+          h('label', "tags",
+            tags = h('input', {type: 'text', className: "form-control"}))
+        )
 
         var tog
         lightbox.show(h('span',
@@ -331,28 +322,46 @@ function createPanel (el, stream) {
 
           click('publish', function () {
 
-            var content = {
-              type: 'curation',
-              curate: url.value,
-              title: title.value,
-              oneLiner: one_liner.value,
-              summary: summary.value,
-              mentions: mentions(summary.value),
-              tags: tags.value.split(/[, ]+/),
-              rating: parseFloat(rating.value)
-            }
-
             // If valid, publish this curation
             try{
               validation.curation(content)
 
-              sbot.publish(content, function (err, msg) {
-                alert('published: '+ msg.key || JSON.stringify(msg))
-                lightbox.close()
+            if(isMsg(url.value) && !credit.value)
+              sbot.get(url.value, function (err, msg) {
+                if(err)
+                  return alert('could not retrive msg:'+url.value)
+                credit.value = msg.value.author
+                publish()
               })
-            }
-            catch(e){
-              alert(e);
+            else
+              publish()
+
+            function publish () {
+
+              var content = {
+                type: 'curation',
+                curate: url.value,
+                credit: credit.value,
+                title: title.value,
+                oneLiner: one_liner.value,
+                summary: summary.value,
+                mentions: mentions(summary.value),
+                tags: tags.value.split(" "),
+                rating: parseFloat(rating.value)
+              }
+
+              // If valid, publish this curation
+              try{
+                validation.curation(content)
+
+                sbot.publish(content, function (err, msg) {
+                  alert('published: '+ msg.key || JSON.stringify(msg))
+                  lightbox.close()
+                })
+              }
+              catch(e){
+                alert(e);
+              }
             }
           }, 'btn btn-success')
         ))
@@ -424,3 +433,22 @@ require('./reconnect')(function (cb) {
   createPanel(content, streams.all())
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
