@@ -41,25 +41,45 @@ function Jade (data, template){
   return new_page_element;
 }
 
+// Setup per page render stuff
+function setup_page()
+{
+  chunks = location.hash.split("/")
+
+  var type = chunks[0]
+  var singular = decodeURIComponent(chunks[1])
+
+  if(type === "")
+  {
+    render_feed()
+  }
+  else if(type === "#t")
+  {
+    render_tag(singular);
+  }
+  else if (type === "#u") {
+    render_person(singular);
+  }
+
+
+  names = document.getElementsByClassName('name')
+  var i;
+  for (i = 0; i < names.length; i++) {
+    console.log(names[i])
+    var text_content = names[i].textContent
+
+    console.log(name(text_content))
+
+    names[i].innerHTML = ""
+    names[i].appendChild( name(text_content) )
+  }
+
+}
+
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
   window.onhashchange = function(){
-    chunks = location.hash.split("/")
-
-    var type = chunks[0]
-    var singular = decodeURIComponent(chunks[1])
-
-    if(type === "")
-    {
-      render_feed()
-    }
-    else if(type === "#t")
-    {
-      render_tag(singular);
-    }
-    else if (type === "#u") {
-      render_person(singular);
-    }
+    setup_page()
   }
 }
 
@@ -418,8 +438,6 @@ function createPanel (el, stream, user) {
 
     el.appendChild(stack)
 
-
-
   pull(
     stream,
     pull.filter(function (e) {
@@ -443,4 +461,5 @@ require('./reconnect')(function (cb) {
   var content = el.querySelector('#content')
   createPanel(content, streams.all())
 
+  setup_page()
 })

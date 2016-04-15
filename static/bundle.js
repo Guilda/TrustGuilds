@@ -107,8 +107,8 @@ function px (n) { return n+'px' }
 
 var view = {
   layout: jade.compile(Buffer("I2hlYWRlcgogIGgxIAogICAgYShocmVmPSIvIikgRW50cnVzdAogIGlucHV0I3NlYXJjaAojY29udGVudAo=","base64")),
-  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBhKGhyZWYgPSBkYXRhLnZhbHVlLmNvbnRlbnQuY3VyYXRlKQogICAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGVuY29kZVVSSUNvbXBvbmVudChkYXRhLnZhbHVlLmF1dGhvcikgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5hdXRob3IgfQogICAgYShocmVmPSIvI3UvI3sgZW5jb2RlVVJJQ29tcG9uZW50KGRhdGEudmFsdWUuY3JlZGl0cykgfSIpCiAgICAgIHNwYW4gI3sgZGF0YS52YWx1ZS5jcmVkaXRzIH0KICAgIAogICAgaWYgZGF0YS52YWx1ZS5jb250ZW50CiAgICAgIGxhYmVsICN7IGRhdGEudmFsdWUuY29udGVudC50eXBlIHx8ICdlbmNyeXB0ZWQnIH0KICAgIAogICAgcCAjeyBtb21lbnQoZGF0YS52YWx1ZS50aW1lc3RhbXApLmZyb21Ob3coKSB9CiAgICBkaXYoc3R5bGU6ICJ3aWR0aDogNDUwcHg7IG92ZXJmbG93OiBoaWRkZW47IikKICAgIAogICAgICBwLnN1bW1hcnkgI3sgZGF0YS52YWx1ZS5jb250ZW50LnN1bW1hcnkgfQogICAgICAKICAgICAgZWFjaCB0YWcgaW4gZGF0YS52YWx1ZS5jb250ZW50LnRhZ3MgCiAgICAgICAgc3Bhbi50YWcKICAgICAgICAgIGEoaHJlZj0iLyN0LyN7dGFnfSIpPSB0YWcKICAgICAgICAK","base64")),
-  person: jade.compile(Buffer("aDEgI3sgZGF0YSB9Cg==","base64"))
+  post: jade.compile(Buffer("LnBvc3QucGFuZWwucGFuZWwtZGVmYXVsdAogIC5wYW5lbC1oZWFkaW5nCiAgICBhKGhyZWYgPSBkYXRhLnZhbHVlLmNvbnRlbnQuY3VyYXRlKQogICAgICBoMiAje2RhdGEudmFsdWUuY29udGVudC50aXRsZX0KICAucGFuZWwtYm9keQogICAgcC5sZWFkICN7ZGF0YS52YWx1ZS5jb250ZW50Lm9uZUxpbmVyfQoKICAgIGEoaHJlZj0iLyN1LyN7IGVuY29kZVVSSUNvbXBvbmVudChkYXRhLnZhbHVlLmF1dGhvcikgfSIpCiAgICAgIHNwYW4ubmFtZSAjeyBkYXRhLnZhbHVlLmF1dGhvciB9CiAgICBhKGhyZWY9Ii8jdS8jeyBlbmNvZGVVUklDb21wb25lbnQoZGF0YS52YWx1ZS5jcmVkaXRzKSB9IikKICAgICAgc3Bhbi5uYW1lICN7IGRhdGEudmFsdWUuY3JlZGl0cyB9CiAgICAKICAgIGlmIGRhdGEudmFsdWUuY29udGVudAogICAgICBsYWJlbCAjeyBkYXRhLnZhbHVlLmNvbnRlbnQudHlwZSB8fCAnZW5jcnlwdGVkJyB9CiAgICAKICAgIHAgI3sgbW9tZW50KGRhdGEudmFsdWUudGltZXN0YW1wKS5mcm9tTm93KCkgfQogICAgZGl2KHN0eWxlOiAid2lkdGg6IDQ1MHB4OyBvdmVyZmxvdzogaGlkZGVuOyIpCiAgICAKICAgICAgcC5zdW1tYXJ5ICN7IGRhdGEudmFsdWUuY29udGVudC5zdW1tYXJ5IH0KICAgICAgCiAgICAgIGVhY2ggdGFnIGluIGRhdGEudmFsdWUuY29udGVudC50YWdzIAogICAgICAgIHNwYW4udGFnCiAgICAgICAgICBhKGhyZWY9Ii8jdC8je3RhZ30iKT0gdGFnCiAgICAgICAgCg==","base64")),
+  person: jade.compile(Buffer("aDEubmFtZSAjeyBkYXRhIH0K","base64"))
 }
 
 // With this data, render the given template at path
@@ -118,25 +118,45 @@ function Jade (data, template){
   return new_page_element;
 }
 
+// Setup per page render stuff
+function setup_page()
+{
+  chunks = location.hash.split("/")
+
+  var type = chunks[0]
+  var singular = decodeURIComponent(chunks[1])
+
+  if(type === "")
+  {
+    render_feed()
+  }
+  else if(type === "#t")
+  {
+    render_tag(singular);
+  }
+  else if (type === "#u") {
+    render_person(singular);
+  }
+
+
+  names = document.getElementsByClassName('name')
+  var i;
+  for (i = 0; i < names.length; i++) {
+    console.log(names[i])
+    var text_content = names[i].textContent
+
+    console.log(name(text_content))
+
+    names[i].innerHTML = ""
+    names[i].appendChild( name(text_content) )
+  }
+
+}
+
 // Sketchy path routing of doom, BEGINS
 if ("onhashchange" in window) {
   window.onhashchange = function(){
-    chunks = location.hash.split("/")
-
-    var type = chunks[0]
-    var singular = decodeURIComponent(chunks[1])
-
-    if(type === "")
-    {
-      render_feed()
-    }
-    else if(type === "#t")
-    {
-      render_tag(singular);
-    }
-    else if (type === "#u") {
-      render_person(singular);
-    }
+    setup_page()
   }
 }
 
@@ -495,8 +515,6 @@ function createPanel (el, stream, user) {
 
     el.appendChild(stack)
 
-
-
   pull(
     stream,
     pull.filter(function (e) {
@@ -520,6 +538,7 @@ require('./reconnect')(function (cb) {
   var content = el.querySelector('#content')
   createPanel(content, streams.all())
 
+  setup_page()
 })
 
 }).call(this,require("buffer").Buffer)
