@@ -19,7 +19,22 @@ module.exports = function (sbot) {
           return e.split(/[ ,]+/)
         }),
         pull.flatten(),
-        pull.filter(v.isTag)
+        pull.filter(v.isTag),
+        pull.unique()
+      )
+    },
+
+    person: function (person) {
+      return pull(
+        sbot.query.read({query: [
+          {$filter: {value: {
+            content: {
+              type: "curation",
+              curate: {$prefix: ''}
+            },
+            author: person
+          }}}
+        ]})
       )
     },
 
@@ -45,6 +60,7 @@ module.exports = function (sbot) {
     }
   }
 }
+
 
 
 
@@ -119,8 +135,6 @@ if ("onhashchange" in window) {
 function render_tag(tag)
 {
   console.log("render_tag " + tag)
-
-
 }
 
 function render_person(person)
@@ -129,7 +143,6 @@ function render_person(person)
 
   var content = document.body.querySelector('#content')
   content.innerHTML = ""
-
   console.log("About to pull omg")
 
   pull( streams.user(person), pull.through( function(chunk){
@@ -139,9 +152,7 @@ function render_person(person)
     console.log("STREAM CLOSED")
   }))
 
-
   console.log("DONE")
-
 
   // console.log(streams.user(person));
   createPanel(content, streams.user(person))
@@ -341,7 +352,7 @@ function createPanel (el, stream) {
       //for the branch link.
       click('post', function () {
         var url = h('input', {type: 'text', className: "form-control"})
-        var url_bundle = h('label', "url", url)
+        var url_bundle = h('label', "source", url)
 
         var title = h('input', {type: 'text', className: "form-control"})
         var title_bundle = h('label', "title", title)
@@ -392,13 +403,12 @@ function createPanel (el, stream) {
 
             var content = {
               type: 'curation',
-              curate: '',
-              url: url.value,
+              curate: url.value,
               title: title.value,
               oneLiner: one_liner.value,
               summary: summary.value,
               mentions: mentions(summary.value),
-              tags: tags.value.split(" "),
+              tags: tags.value.split(/[, ]+/),
               rating: parseFloat(rating.value)
             }
 
@@ -30561,7 +30571,7 @@ function valid(test, msg) {
 }
 
 function isTag(t) {
-  return /^\#[A-z0-9_\-]+$/
+  return /^\#[A-z0-9_\-]+$/.test(t)
 }
 
 function isNumber (n) {
