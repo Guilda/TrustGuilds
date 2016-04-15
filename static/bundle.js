@@ -240,8 +240,11 @@ function name (id) {
     ]}),
     function (err, names) {
       if(err) throw err
+      console.log(names)
       n.textContent = maxKey(names) || id.substring(0, 10)
     })
+
+
 
   return n
 }
