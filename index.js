@@ -151,6 +151,12 @@ function first(stream, cb) {
   pull(stream, pull.find(cb))
 }
 
+function max (ary, map) {
+  return ary.reduce(function (a, b) {
+    return map(b) > map(a) ? b : a
+  })
+}
+
 function name (id) {
   var n = h('span', id.substring(0, 10))
   //choose the most popular name for this person.
@@ -159,19 +165,23 @@ function name (id) {
   //is pretty powerful!
   //TODO: "most popular" name is easily gameable.
   //must come up with something better than this.
-  first(
+  pull(
     sbot.links2.read({query: [
       {$filter: {rel: ['mentions', {$prefix: '@'}], dest: id}},
       {$reduce: {
-        $group: [['rel', 1]],
-        $count: true
+        name: ['rel', 1],
+        count: {$count: true}
       }}
     ]}),
-    function (err, names) {
+    pull.collect(function (err, names) {
+      console.log(err, names)
       if(err) throw err
-      console.log(names)
-      n.textContent = maxKey(names) || id.substring(0, 10)
+      var pref = max(names, function (e) { return e.count })
+      console.log(names, pref)
+      pref = pref && pref.name || pref
+      n.textContent = pref || id.substring(0, 10)
     })
+  )
 
 
 
@@ -184,7 +194,7 @@ function stats (id) {
   first(
     sbot.links2.read({query: [
       {$filter: {dest: id}},
-      {$reduce: {$group: [['rel', 0]], $collect: 'source'}}
+      {$reduce: {$group: [['rel', 0]], $reduce: {$collect: 'source'}}}
     ]}),
     function (err, feedback) {
 
@@ -203,7 +213,7 @@ function feedback (id) {
   first(
     sbot.links2.read({query: [
       {$filter: {dest: id}},
-      {$reduce: {$group: [['rel', 0]], $count: true}}
+      {$reduce: {$group: [['rel', 0]],$reduce: {$count: true}}}
     ]}), function (err, feedback) {
         if(err || !feedback) return
         var s = []
@@ -479,4 +489,5 @@ require('./reconnect')(function (cb) {
 
   setup_page()
 })
+
 
