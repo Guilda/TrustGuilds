@@ -27,7 +27,7 @@
     "pull-ws-server": "^1.7.0",
     "scuttlebot": "git+https://github.com/ssbc/scuttlebot.git#23e7009661b3ca7b87310d76fe78f39ffeda0acd",
     "ssb-http": "0.0.2",
-    "ssb-links": "^1.0.1",
+    "ssb-links": "^2.0.0",
     "ssb-markdown": "^3.0.0",
     "ssb-mentions": "0.0.1",
     "ssb-msgs": "^5.2.0",
